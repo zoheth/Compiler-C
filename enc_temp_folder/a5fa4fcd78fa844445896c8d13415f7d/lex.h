@@ -13,8 +13,8 @@ enum {
 
 class Token { 
 public:
-	int id;
-	int value;
+	int id;		//id就是上面的enum ~ ; { } ( ) ] , :的id是本身
+	int value;	//大部分value都为0  Num的value为本身数字大小  有待重新定义
 	Token(int i, int v);
 	Token();
 	void set(int i);
@@ -35,10 +35,12 @@ public:
 	int Btype;
 	int Bvalue;
 	string get_name() const;
-	bool operator==(const Identifier & obj2) const;
+	bool operator==(const Identifier & obj2) const;  //重载==用于find
 	bool operator==(string str) const;
 	void print();
 };
+
+vector<Identifier> IDENTS;//符号表向量
 
 class Lex {
 	string text;
@@ -59,7 +61,7 @@ class Lex {
 	Token delimiter_token();
 public:
 	Lex();
-	Lex(string str); 
-	void set(string str);
-	Token next_token();
+	Lex(string str);		//传入代码文本初始化
+	void set(string str);	//设置代码文本
+	Token next_token();	
 };

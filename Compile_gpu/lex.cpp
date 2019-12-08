@@ -16,7 +16,6 @@ using namespace std;
 //	Inc,Dec
 //};
 
-vector<Identifier> IDENTS;
 
 string Identifier::get_name() const {
 	return name;
