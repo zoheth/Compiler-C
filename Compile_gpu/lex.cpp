@@ -8,13 +8,13 @@
 #include "lex.h"
 using namespace std;
 
-enum {
-	Num=128,Fun,Sys,Glo,Loc,
-	Id,Char,String,Else,Enum,If,Int,Return,Sizeof,While,  //对应关键字查询表 Id定位
-	Assign,Add,Sub,Mul,Div,Mod,Xor,Brak,Cond,   //对应界符查询表 Assign定位
-	Lor,Lan,Or,And,Eq,Ne,Lt,Gt,Le,Ge,Shl,Shr,
-	Inc,Dec
-};
+//enum {
+//	Num=128,Fun,Sys,Glo,Loc,
+//	Id,Char,String,Else,Enum,If,Int,Return,Sizeof,While,  //对应关键字查询表 Id定位
+//	Assign,Add,Sub,Mul,Div,Mod,Xor,Brak,Cond,   //对应界符查询表 Assign定位
+//	Lor,Lan,Or,And,Eq,Ne,Lt,Gt,Le,Ge,Shl,Shr,
+//	Inc,Dec
+//};
 
 vector<Identifier> IDENTS;
 
@@ -406,7 +406,7 @@ Token Lex::next_token() {
 		printf(" :{ %d, %d }\n", cur.id, cur.value);
 		token_s.push_back(cur);
 	}
-	next_token();
+	//next_token();
 	return cur;
 }
 
@@ -451,17 +451,17 @@ void print() {
 //	}
 //}
 
-int main() {
-	string text;
-	fstream in("text.txt");
-	stringstream ss;
-	ss << in.rdbuf();
-	text = ss.str();
-	cout << text;
-	Lex my_lex(text);
-	cout << endl;
-	my_lex.next_token();
-	cout << endl;
-	print();
-	return 0;
-}
+//int main() {
+//	string text;
+//	fstream in("text.txt");
+//	stringstream ss;
+//	ss << in.rdbuf();
+//	text = ss.str();
+//	cout << text;
+//	Lex my_lex(text);
+//	cout << endl;
+//	my_lex.next_token();
+//	cout << endl;
+//	print();
+//	return 0;
+//}

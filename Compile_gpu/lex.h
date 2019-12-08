@@ -3,6 +3,13 @@
 #include <string>
 #include <vector>
 using namespace std;
+enum {
+	Num = 128, Fun, Sys, Glo, Loc,
+	Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While,  //对应关键字查询表 Id定位
+	Assign, Add, Sub, Mul, Div, Mod, Xor, Brak, Cond,   //对应界符查询表 Assign定位
+	Lor, Lan, Or, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr,
+	Inc, Dec
+};
 
 class Token { 
 public:
@@ -27,13 +34,6 @@ public:
 	int Bcalss;
 	int Btype;
 	int Bvalue;
-	/*void hash_code(string str) {
-		string::iterator ite;
-		ite = str.begin();
-		for (size_t i = 0; i < str.size(); i++) {
-			hash = *ite + 147 * hash;
-		}
-	}*/
 	string get_name() const;
 	bool operator==(const Identifier & obj2) const;
 	bool operator==(string str) const;
@@ -47,10 +47,6 @@ class Lex {
 	unsigned line;
 	vector<string> I, C, S, K, P;
 	vector<float> N;
-public:
-	Lex();
-	Lex(string str); 
-	void set(string str);
 	bool is_i(char c);
 	void init();
 	float to_float(string str);
@@ -61,8 +57,9 @@ public:
 	Token string_end(string str);
 	Token string_token(string str);
 	Token delimiter_token();
-	Token next_token();
-	float get_N(int i) {
-		return N[i];
-	}
+public:
+	Lex();
+	Lex(string str);		//传入代码文本初始化
+	void set(string str);	//设置代码文本
+	Token next_token();	
 };

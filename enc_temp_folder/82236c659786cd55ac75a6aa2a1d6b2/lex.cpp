@@ -8,29 +8,36 @@
 #include "lex.h"
 using namespace std;
 
-enum {
-	Num=128,Fun,Sys,Glo,Loc,
-	Id,Char,String,Else,Enum,If,Int,Return,Sizeof,While,  //对应关键字查询表 Id定位
-	Assign,Add,Sub,Mul,Div,Mod,Xor,Brak,Cond,   //对应界符查询表 Assign定位
-	Lor,Lan,Or,And,Eq,Ne,Lt,Gt,Le,Ge,Shl,Shr,
-	Inc,Dec
-};
+//enum {
+//	Num=128,Fun,Sys,Glo,Loc,
+//	Id,Char,String,Else,Enum,If,Int,Return,Sizeof,While,  //对应关键字查询表 Id定位
+//	Assign,Add,Sub,Mul,Div,Mod,Xor,Brak,Cond,   //对应界符查询表 Assign定位
+//	Lor,Lan,Or,And,Eq,Ne,Lt,Gt,Le,Ge,Shl,Shr,
+//	Inc,Dec
+//};
 
 vector<Identifier> IDENTS;
 
-class Pair {
-	string id;
-	int index;
-public:
-	Pair(int i, string str) {
-		index = i;
-		id = str;
-	}
-	Pair() {
-		index = 0;
-		id = "NULL";
-	}
-};
+string Identifier::get_name() const {
+	return name;
+}
+bool Identifier::operator==(const Identifier & obj2) const
+{
+	if (this->get_name().compare(obj2.get_name()) == 0)
+		return true;
+	else
+		return false;
+}
+bool Identifier::operator==(string str) const
+{
+	if (this->get_name().compare(str) == 0)
+		return true;
+	else
+		return false;
+}
+void Identifier::print() {
+	cout << name + " \ttoken: " << token << endl;
+}
 Token::Token(int i, int v) {
 	id = i;
 	value = v;

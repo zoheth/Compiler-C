@@ -3,8 +3,15 @@
 #include <string>
 #include <vector>
 using namespace std;
+enum {
+	Num = 128, Fun, Sys, Glo, Loc,
+	Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While,  //对应关键字查询表 Id定位
+	Assign, Add, Sub, Mul, Div, Mod, Xor, Brak, Cond,   //对应界符查询表 Assign定位
+	Lor, Lan, Or, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr,
+	Inc, Dec
+};
 
-class Token {
+class Token { 
 public:
 	int id;
 	int value;
@@ -13,10 +20,10 @@ public:
 	void set(int i);
 	void set(int i, int v);
 };
-class Synbl {
+class Synbl { //待定符号表
 
 };
-class Identifier {
+class Identifier {  //与C4结构一样 name改成了string 暂时用作符号表
 public:
 	int token;
 	int hash;
@@ -27,34 +34,10 @@ public:
 	int Bcalss;
 	int Btype;
 	int Bvalue;
-	/*void hash_code(string str) {
-		string::iterator ite;
-		ite = str.begin();
-		for (size_t i = 0; i < str.size(); i++) {
-			hash = *ite + 147 * hash;
-		}
-	}*/
-	string get_name() const {
-		return name;
-	}
-	bool operator==(const Identifier & obj2) const
-	{
-		if (this->get_name().compare(obj2.get_name()) == 0)
-			return true;
-		else
-			return false;
-	}
-	bool operator==(string str) const
-	{
-		if (this->get_name().compare(str) == 0)
-			return true;
-		else
-			return false;
-	}
-	void print() {
-		cout << name + " \ttoken: " << token << endl;
-	}
-	
+	string get_name() const;
+	bool operator==(const Identifier & obj2) const;
+	bool operator==(string str) const;
+	void print();
 };
 
 class Lex {
@@ -64,10 +47,6 @@ class Lex {
 	unsigned line;
 	vector<string> I, C, S, K, P;
 	vector<float> N;
-public:
-	Lex();
-	Lex(string str);
-	void set(string str);
 	bool is_i(char c);
 	void init();
 	float to_float(string str);
@@ -78,8 +57,9 @@ public:
 	Token string_end(string str);
 	Token string_token(string str);
 	Token delimiter_token();
+public:
+	Lex();
+	Lex(string str); 
+	void set(string str);
 	Token next_token();
-	float get_N(int i) {
-		return N[i];
-	}
 };
