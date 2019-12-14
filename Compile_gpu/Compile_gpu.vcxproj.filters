@@ -18,6 +18,12 @@
     <ClCompile Include="lex.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="vm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ccc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lex.h">

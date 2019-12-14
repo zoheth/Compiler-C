@@ -1,14 +1,24 @@
 #pragma once
 #include <string>
 #include <vector>
+
 using namespace std;
-enum {
+extern enum {
+	GPU, LEA, IMM, JMP, CALL, JZ, JNZ, ENT, ADJ, LEV, LI, LC, SI, SC, PUSH,
+	OR, XOR, AND, EQ, NE, LT, GT, LE, GE, SHL, SHR, ADD, SUB, MUL, DIV, MOD,
+	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT
+};
+extern enum {
 	Num = 128, Fun, Sys, Glo, Loc,
 	Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While,  //对应关键字查询表 Id定位
 	Assign, Add, Sub, Mul, Div, Mod, Xor, Brak, Cond,   //对应界符查询表 Assign定位
 	Lor, Lan, Or, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr,
 	Inc, Dec
 };
+extern enum {
+	INT,CHAR,PTR
+};
+extern int *code_text;
 
 class Token { 
 public:
@@ -18,6 +28,7 @@ public:
 	Token();
 	void set(int i);
 	void set(int i, int v);
+	bool operator==(const int & i) const;
 };
 class Synbl { //待定符号表
 
@@ -28,18 +39,18 @@ public:
 	int hash;
 	string name;
 	int class_;
-	int tpye;
+	int type;
 	int value;
 	int Bcalss;
 	int Btype;
 	int Bvalue;
+	Identifier();
 	string get_name() const;
 	bool operator==(const Identifier & obj2) const;  //重载==用于find
 	bool operator==(string str) const;
 	void print();
-};
 
-vector<Identifier> IDENTS;//符号表向量
+};
 
 class Lex {
 	string text;
@@ -48,7 +59,13 @@ class Lex {
 	unsigned line;
 	vector<string> I, C, S, K, P;
 	vector<float> N;
-	bool is_i(char c);
+	vector<Identifier> IDENTS;
+	inline bool is_i(char c) {
+		if ((c <= 'z'&&c >= 'a') || (c <= 'Z'&&c >= 'A') || (c == '_'))
+			return true;
+		else
+			return false;
+	}
 	void init();
 	float to_float(string str);
 	Token number_token();
@@ -62,5 +79,6 @@ public:
 	Lex();
 	Lex(string str);		//传入代码文本初始化
 	void set(string str);	//设置代码文本
-	Token next_token();	
+	Token next_token();
+	vector<Identifier> idents();
 };

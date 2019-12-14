@@ -16,7 +16,9 @@ using namespace std;
 //	Inc,Dec
 //};
 
-
+Identifier::Identifier() {
+	;
+}
 string Identifier::get_name() const {
 	return name;
 }
@@ -37,6 +39,7 @@ bool Identifier::operator==(string str) const
 void Identifier::print() {
 	cout << name + " \ttoken: " << token << endl;
 }
+
 Token::Token(int i, int v) {
 	id = i;
 	value = v;
@@ -52,6 +55,13 @@ void Token::set(int i) {
 void Token::set(int i, int v) {
 	id = i;
 	value = v;
+}
+bool Token::operator==(const int & i) const
+{
+	if (this->id == i)
+		return true;
+	else
+		return false;
 }
 
 //vector<string> I, C, S, N, K, P;  
@@ -94,12 +104,11 @@ void Lex::set(string str) {
 	pos = 0;
 	line = 1;
 }
-inline bool Lex::is_i(char c) {
-	if ((c <= 'z'&&c >= 'a') || (c <= 'Z'&&c >= 'A') || (c == '_'))
-		return true;
-	else
-		return false;
+
+vector<Identifier> Lex::idents() {
+	return IDENTS;
 }
+
 float Lex::to_float(string str) {
 	float res = 0;
 	int left = 0;
@@ -409,15 +418,15 @@ Token Lex::next_token() {
 	return cur;
 }
 
-void print() {
-	/*vector<Identifier>::iterator iter;
-	for (iter = IDENTS.begin(); iter != IDENTS.end(); iter++) {
-		iter->print();
-	}*/
-	for (int i = 0; i < IDENTS.size(); i++) {
-		IDENTS[i].print();
-	}
-}
+//void print() {
+//	/*vector<Identifier>::iterator iter;
+//	for (iter = IDENTS.begin(); iter != IDENTS.end(); iter++) {
+//		iter->print();
+//	}*/
+//	for (int i = 0; i < IDENTS.size(); i++) {
+//		IDENTS[i].print();
+//	}
+//}
 //void print() {
 //	printf("标识符\tC字符\tS字符串\tN常数\tK关键字\tP界符\n");
 //	
