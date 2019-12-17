@@ -1,0 +1,38 @@
+Program->Global-declaration Program_1 
+Program_1->Global-declaration Program_1 |@ 
+Global-declaration->Indent-decl Global-declaration_1 
+Global-declaration_1->Function-decl |G-variable-decl 
+Indent-decl->Type Pointer id <ident-rec> 
+Function-decl->( Parameter_decl ) { Body-decl <id-to-glo>} <leave> 
+G-variable-decl->Decl_1 ; 
+Parameter_decl->Type Pointer id <parameter-rec>Decl_3 |@ 
+Decl_1->, Pointer id <ident-rec>Decl_1 |@ 
+Variable-decl->Type Variable-decl_1 
+Variable-decl_1->Pointer id <loc-var-rec>Decl_2 ; 
+Decl_2->, Pointer id <loc-var-rec>Decl_2 |@ 
+Decl_3->, Pointer id <parameter-rec>Decl_3 |@ 
+Pointer->'*' Pointer <add_pointer>|@ 
+Type->char <update_type>|void <update_type>|int <update_type> 
+Body-decl-><loc-index-rec>Body-decl_1 <func-enter>Body-decl_2  
+Body-decl_1->Variable-decl Body-decl_1 |@ 
+Body-decl_2->Statement Body-decl_2 |@ 
+Statement->If-statement |While-statement |{ Statement } |return Expression ; <leave>|Expression ; 
+If-statement->if ( Expression ) <if-begin>Statement else <else-begin>Statement <if-end-rec> 
+While-statement->while <after-while>( Expression ) <while-begin>Statement <while-end> 
+Expression->id = id Arith-exp <assign>Expression_1 ; 
+Expression_1->, Expression |@ 
+Arith-exp->Binary-operator id <binary-operator>Arith-exp |@ 
+Expression->Expression_1 ; |@ 
+Expression_1->id Expression_2
+Expression->id Expression_1 
+Expression_1->Operator id Expression_1 |@ 
+Operator->Arith-operator |Logic-operator |Assign-operator
+Arith-operator_1->+ |- 
+Arith-operator_2->* |/ 
+Logic-operator->< |> 
+Assign-operator->=
+ 
+
+
+
+

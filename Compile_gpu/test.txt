@@ -1,0 +1,12 @@
+int main()
+{
+int a,c;
+if(a+b<c)
+{
+m=a*b+c;
+}
+else
+{
+z; 
+}
+}

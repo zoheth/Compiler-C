@@ -11,12 +11,11 @@ using namespace std;
 /*
 extern enum Token_tag {
 Num = 128, Fun, Sys, Glo, Loc,
-Int_const,Char_const,
 Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While, Void, //对应关键字查询表 Id定位
-Assign, Add, Sub, Mul, Div, Open_paren, Close_paren, Open_curly, Close_curly, Comma, Semicolon,		  //对应界符查询表 Assign定位
-Add_eq, Sub_eq, Or, And, Eq, Ne, Lt, Le, Gt, Ge, End
+Assign, Add, Sub, Open_paren, Close_paren, Open_curly, Close_curly, Comma, Semicolon, Mul, Div, Mod, Xor, Brak, Cond,			  //对应界符查询表 Assign定位
+Lor, Lan, Or, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr,
+Inc, Dec
 };*/
-
 Identifier * CUR_ID;
 Identifier::Identifier() {
 	;
@@ -81,17 +80,23 @@ void Lex::init() {
 	K.push_back("sizeof");
 	K.push_back("while");
 	K.push_back("void");
-
+	//Assign, Add, Sub, Open_paren, Close_paren, Open_curly, Close_curly, Comma, Semicolon, Mul, Div, Mod, Xor, Brak, Cond,
+	P.push_back("=");
 	P.push_back("+");
 	P.push_back("-");
-	P.push_back("*");
-	P.push_back("/");
 	P.push_back("(");
 	P.push_back(")");
 	P.push_back("{");
 	P.push_back("}");
 	P.push_back(",");
-	P.push_back(";");	
+	P.push_back(";");
+	P.push_back("#");
+	P.push_back("*");
+	P.push_back("/");
+	P.push_back("%");
+	P.push_back("^");
+	P.push_back("[");
+	P.push_back("?");
 }
 Lex::Lex() {
 	text = "";
@@ -305,7 +310,7 @@ Token Lex::string_token(string str) {
 }
 Token Lex::delimiter_token() {
 	Token the_token;
-	if (text[pos] == '>') {											//>=
+	if (text[pos] == '>') {
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
 			the_token.set(Ge);
@@ -320,7 +325,7 @@ Token Lex::delimiter_token() {
 			return the_token;
 		}
 	}
-	else if (text[pos] == '<') {								//<=
+	else if (text[pos] == '<') {
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
 			//临时输出
@@ -335,7 +340,7 @@ Token Lex::delimiter_token() {
 			return the_token;
 		}
 	}
-	else if (text[pos] == '=') {							//==	
+	else if (text[pos] == '=') {
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
 			//临时输出
@@ -350,114 +355,26 @@ Token Lex::delimiter_token() {
 			return the_token;
 		}
 	}
-	else if (text[pos] == '!') {							//!=	
-		if (pos + 1 < text.size() && text[pos + 1] == '=') {
-			pos++;
-			//临时输出
-			printf("!=\t");
-			the_token.set(Ne);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("!\t");
-			throw "未识别的字符";
-			return the_token;
-		}
-	}
-	else if (text[pos] == '+') {								//+=
-		if (pos + 1 < text.size() && text[pos + 1] == '=') {
-			pos++;
-			//临时输出
-			printf("+=\t");
-			the_token.set(Add_eq);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("+\t");
-			the_token.set(Add);
-			return the_token;
-		}
-	}
-	else if (text[pos] == '-') {								//-=
-		if (pos + 1 < text.size() && text[pos + 1] == '=') {
-			pos++;
-			//临时输出
-			printf("-=\t");
-			the_token.set(Sub_eq);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("-\t");
-			the_token.set(Sub);
-			return the_token;
-		}
-	}
-	else if (text[pos] == '&') {							//&&	
-		if (pos + 1 < text.size() && text[pos + 1] == '&') {
-			pos++;
-			//临时输出
-			printf("&&\t");
-			the_token.set(And);
-			return the_token;
-		}
-		else {
-			//临时输出
-			//printf("&\t");
-			throw "未识别的字符";
-			return the_token;
-		}
-	}
-	else if (text[pos] == '|') {							//||	
-		if (pos + 1 < text.size() && text[pos + 1] == '|') {
-			pos++;
-			//临时输出
-			printf("||\t");
-			the_token.set(Or);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("|\t");
-			throw "未识别的字符";
-			return the_token;
-		}
-	}
-	else if (text[pos] == '#')
-	{
-		printf("#\t");
-		the_token.set(End);
-		return the_token;
-	}
-
 	string str;
 	str.push_back(text[pos]);
-
 	vector<string>::iterator res = find(P.begin(), P.end(), str);
 	if (res != P.end()) {
 		//临时输出
 		cout << str << '\t';
-		the_token.set(Assign + (res - P.begin())+1);
-		//the_token.set(Assign + (res - P.begin()));
+		//the_token.set(Assign + (res - P.begin())+1);
+		the_token.set(Assign + (res - P.begin()));
 		return the_token;
 	}
-	/*else if (text[pos] == '~' || text[pos] == ';' || text[pos] == '{' || text[pos] == '}' || text[pos] == '(' || text[pos] == ')' || text[pos] == ']' || text[pos] == ',' || text[pos] == ':') {
+	else if (text[pos] == '~' || text[pos] == ';' || text[pos] == '{' || text[pos] == '}' || text[pos] == '(' || text[pos] == ')' || text[pos] == ']' || text[pos] == ',' || text[pos] == ':') {
 		// directly return the character as token;
 		//临时输出
 		cout << text[pos] << '\t';
 		the_token.set(text[pos]);
 		return the_token;
-	}*/
+	}
 	else {
 		if (text[pos] == '\n')
 			line++;
-		else
-		{
-			cout << text[pos] << '\t';
-			the_token.set(text[pos]);
-		}
 		return the_token;
 	}
 }

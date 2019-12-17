@@ -1,12 +1,11 @@
-#include "stdafx.h"
 #include <iostream>
 #include <vector>
 #include "lex.h"
 using namespace std;
-/*
+
 class Semantic {
 	int type;
-	Token token;
+	Token token; 
 	Token prev_token;
 	Identifier cur_id; //存储活跃的id信息
 	vector<Identifier> IDENTS;
@@ -16,22 +15,22 @@ class Semantic {
 	int pos_local;
 	int *mark_a;
 	int *mark_b; //只用两个标记 if和while共用 所以不能嵌套
-
+	
 public:
 	vector<void(Semantic::*)()> func;//语义函数向量
 	void ident_rec() {
-
+		
 		//cur_id在此之前就已经更新 更新id不需要查找 直接下一个
 		cur_id.type = type;
 		if (token == '(') {  //此时的token为下一个token
 			cur_id.class_ = Fun;
-			cur_id.value = int(code_text + 1);//！！！！函数地址,暂时未确定形式
-											  //！！！！代码地址自增
+			cur_id.value = int(code_text+1);//！！！！函数地址,暂时未确定形式
+			//！！！！代码地址自增
 		}
 		else {
 			cur_id.class_ = Glo; //全局变量
 			cur_id.value = 0;//！！！！该数据的地址
-							 //！！！！数据地址自增
+			//！！！！数据地址自增
 		}
 		while (type >= PTR) {
 			type -= PTR;
@@ -46,14 +45,14 @@ public:
 		type += PTR;
 	}
 	void id_to_glo() {  //变量回归调用之前的值
-						//！！！！这里之后需要改进
+		//！！！！这里之后需要改进
 		vector<Identifier>::iterator iter;
 		for (iter = IDENTS.begin(); iter != IDENTS.end(); iter++) {
 			if (iter->class_ == Loc) {
 				iter->class_ = iter->Bcalss;
 				iter->type = iter->Btype;
 				iter->value = iter->Bvalue;
-
+				
 			}
 		}
 	}
@@ -67,7 +66,7 @@ public:
 		params++;
 	}
 	void loc_index_rec() {
-		pos_local = params + 1;
+		pos_local = params+1;
 	}
 	void loc_var_rec() {
 		cur_id.Bcalss = cur_id.class_;
@@ -78,7 +77,7 @@ public:
 		cur_id.value = pos_local;
 		pos_local++;  //是否有必要换变量，或者是否有必要新建这个函数
 	}
-
+	
 	void func_enter() {
 		//写入函数开始标记
 		code_text++;
@@ -107,7 +106,7 @@ public:
 		*mark_a = (int)(code_text + 1);
 	}
 	void after_while() {
-		mark_a = code_text + 1;
+		mark_a = code_text + 1; 
 	}
 	void while_begin() {
 		code_text++;
@@ -130,21 +129,21 @@ public:
 
 	}
 	void push() {
-		func.push_back(&Semantic::add_ptr);					//0
-		func.push_back(&Semantic::ident_rec);				//1
-		func.push_back(&Semantic::id_to_glo);				//2
-		func.push_back(&Semantic::parameter_rec);			//3
-		func.push_back(&Semantic::loc_var_rec);				//4
-		func.push_back(&Semantic::loc_index_rec);			//5
-		func.push_back(&Semantic::type_rec);				//6
-		func.push_back(&Semantic::func_enter);				//7
-		func.push_back(&Semantic::leave);					//8
-		func.push_back(&Semantic::if_begin);				//9
-		func.push_back(&Semantic::else_begin);				//10
-		func.push_back(&Semantic::if_end);					//11
-		func.push_back(&Semantic::after_while);				//12
-		func.push_back(&Semantic::while_begin);				//13
-		func.push_back(&Semantic::while_end);				//14
+		func.push_back(&Semantic::add_ptr);
+		func.push_back(&Semantic::ident_rec);
+		func.push_back(&Semantic::id_to_glo);
+		func.push_back(&Semantic::parameter_rec);
+		func.push_back(&Semantic::loc_var_rec);
+		func.push_back(&Semantic::loc_index_rec);
+		func.push_back(&Semantic::type_rec);
+		func.push_back(&Semantic::func_enter);
+		func.push_back(&Semantic::leave);
+		func.push_back(&Semantic::if_begin);
+		func.push_back(&Semantic::else_begin);
+		func.push_back(&Semantic::if_end);
+		func.push_back(&Semantic::after_while);
+		func.push_back(&Semantic::while_begin);
+		func.push_back(&Semantic::while_end);
 	}
 };
 
@@ -154,4 +153,3 @@ int main() {
 	(a.*xx)();
 	return 0;
 }
-*/
