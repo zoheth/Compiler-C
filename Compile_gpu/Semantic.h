@@ -31,6 +31,7 @@ public:
 		code_text = asm_text;
 		/////////////
 		cur_data = asm_data;
+		level.push(0);
 	}
 	void set_ident(vector<Identifier> *i) {
 		IDENTS = i;

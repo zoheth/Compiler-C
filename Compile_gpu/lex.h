@@ -2,18 +2,17 @@
 #include <string>
 #include <vector>
 using namespace std;
-
 extern enum {
 	GPU, LEA, IMM, JMP, CALL, JZ, JNZ, ENT, ADJ, LEV, LI, LC, SI, SC, PUSH,
 	OR, XOR, AND, EQ, NE, LT, GT, LE, GE, SHL, SHR, ADD, SUB, MUL, DIV, MOD,
-	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT,GMALC
+	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT
 };
 extern enum Token_tag {
-	Num = 128, Fun, Sys, Glo,Gpu,Loc,Dev,
+	Num = 128, Fun, Sys, Glo, Loc,
 	Int_const, Char_const,
 	Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While, Void, //对应关键字查询表 Id定位
 	Assign, Add, Sub, Mul, Div, Open_paren, Close_paren, Open_curly, Close_curly, Comma, Semicolon, 		  //对应界符查询表 Assign定位
-	Add_eq, Sub_eq, Or, And, Eq, Ne, Lt, Le, Gt, Ge, End
+	Or, And, Eq, Ne, Lt, Gt, End, Gpu, Dev
 };
 extern enum {
 	VOID, INT, CHAR, PTR
@@ -22,6 +21,8 @@ extern enum {
 static int *asm_text;
 
 static int *asm_data;
+
+
 
 class Token {
 public:

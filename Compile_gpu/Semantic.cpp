@@ -128,15 +128,13 @@ void Semantic::imm_num() {
 	expr_type = INT;
 }
 void Semantic::pk_assign() {
-	if (prev_token.id >= level.top()) {
-		if (*code_text == LC || *code_text == LI) {
-			*code_text = PUSH; // save the lvalue's pointer
-		}
-		else {
-			throw "¸³Öµ´íÎó";
-		}
-		level.push(Assign);
+	if (*code_text == LC || *code_text == LI) {
+		*code_text = PUSH; // save the lvalue's pointer
 	}
+	else {
+		//throw "¸³Öµ´íÎó";
+	}
+	level.push(Assign);
 }
 
 void Semantic::pk_add() {
@@ -150,7 +148,8 @@ void Semantic::pk_mul() {
 	level.push(Mul);
 }
 void Semantic::back() {
-	while (!level.empty()&&level.top()>token.id) {
+	cout << level.top() << " " << token.id << endl;
+	while (level.top()!=0&&(level.top()>token.id||token.id> Close_paren||token.id<Assign)) {
 		int temp = level.top();
 		level.pop();
 		if (temp == Assign) {
@@ -164,7 +163,7 @@ void Semantic::back() {
 		}
 		else if (temp == Mul) {
 			code_text++;
-			*code_text = Mul;
+			*code_text = MUL;
 		}
 	}
 }

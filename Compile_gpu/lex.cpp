@@ -156,7 +156,7 @@ Token Lex::number_token() {
 			}
 		}
 	}
-	the_token.set(Num, value);
+	the_token.set(Int_const, value);
 	cout << value << '\t';
 	return the_token;
 
@@ -305,7 +305,7 @@ Token Lex::string_token(string str) {
 }
 Token Lex::delimiter_token() {
 	Token the_token;
-	if (text[pos] == '>') {											//>=
+	if (text[pos] == '>') /*{											//>=
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
 			the_token.set(Ge);
@@ -319,8 +319,14 @@ Token Lex::delimiter_token() {
 			the_token.set(Gt);
 			return the_token;
 		}
+	}*/
+	{
+		//临时输出
+		printf(">\t");
+		the_token.set(Gt);
+		return the_token;
 	}
-	else if (text[pos] == '<') {								//<=
+	else if (text[pos] == '<') /*{								//<=
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
 			//临时输出
@@ -334,6 +340,12 @@ Token Lex::delimiter_token() {
 			the_token.set(Lt);
 			return the_token;
 		}
+	}*/
+	{
+		//临时输出
+		printf("<\t");
+		the_token.set(Lt);
+		return the_token;
 	}
 	else if (text[pos] == '=') {							//==	
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
@@ -362,36 +374,6 @@ Token Lex::delimiter_token() {
 			//临时输出
 			printf("!\t");
 			throw "未识别的字符";
-			return the_token;
-		}
-	}
-	else if (text[pos] == '+') {								//+=
-		if (pos + 1 < text.size() && text[pos + 1] == '=') {
-			pos++;
-			//临时输出
-			printf("+=\t");
-			the_token.set(Add_eq);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("+\t");
-			the_token.set(Add);
-			return the_token;
-		}
-	}
-	else if (text[pos] == '-') {								//-=
-		if (pos + 1 < text.size() && text[pos + 1] == '=') {
-			pos++;
-			//临时输出
-			printf("-=\t");
-			the_token.set(Sub_eq);
-			return the_token;
-		}
-		else {
-			//临时输出
-			printf("-\t");
-			the_token.set(Sub);
 			return the_token;
 		}
 	}

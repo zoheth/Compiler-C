@@ -358,6 +358,9 @@ void Grammer::getFollowSet(Item target)
 }*/
 void Grammer::getFollowSet(Item target)
 {
+	if (target.name == "Value_1") {
+		int a;
+	}
 	for (int i = 0; i < T; i++)
 	{
 		int len = productions[i].right.size();
@@ -373,6 +376,7 @@ void Grammer::getFollowSet(Item target)
 		}
 		if (index == -1) continue;
 		int next = index + 1;
+		
 		while (next < len)
 		{
 			if (isAction(productions[i].right[next])==false)
@@ -384,8 +388,10 @@ void Grammer::getFollowSet(Item target)
 		}
 		if (index < len - 1 && next < len)
 		{
+			
 			for (int k = index + 1; k < len; k++)
 			{
+				flag = 0;
 				Item temp = productions[i].right[k];
 				if (isTerminal(temp))
 				{
@@ -421,19 +427,21 @@ void Grammer::getFollowSet(Item target)
 				if (productions[i].right[j].type == ItemType::VN)
 					mark++;
 			}
-			if (mark == tag && tag!=0)
+			if (mark == tag && tag!=0 && target.name != productions[i].left.name)
 			{
 				cout <<"看这里！！"<< productions[i].left.name << endl;
-				getFollowSet(productions[i].left);
+				//if(getVNindex(target)>getVNindex(productions[i].left))
+					getFollowSet(productions[i].left);
 				set<string>::iterator it;
 				Item tmp = productions[i].left;
 				for (it = followSet[getVNindex(tmp)].begin(); it != followSet[getVNindex(tmp)].end(); it++)
 					followSet[getVNindex(target)].insert(*it);
 			}
 		}
-		else if ((next>=len)&&(index == len - 1 && target.name != productions[i].left.name))
+		else if ((next>=len||index == len - 1 ) && (target.name != productions[i].left.name))
 		{
-			getFollowSet(productions[i].left);
+			//if (getVNindex(target)>getVNindex(productions[i].left))
+				getFollowSet(productions[i].left);
 			set<string>::iterator it;
 			Item tmp = productions[i].left;
 			for (it = followSet[getVNindex(tmp)].begin(); it != followSet[getVNindex(tmp)].end(); it++)
@@ -476,6 +484,8 @@ void Grammer::createFollowSet()
 	cout << "FOLLOW开始了"<<endl;
 	int index = getVNindex(start);
 	followSet[index].emplace("#");
+	
+
 	/*
 	cout << "HERE!" << endl;
 	set<string>::iterator f;
@@ -486,8 +496,14 @@ void Grammer::createFollowSet()
 	{
 		cout <<"开始建立"<<vn[i].name << endl;
 		string name = vn[i].name;
-		if (name == "Statement" || name == "While-statement" || name == "If-statement")
+		if (name == "Statement" || name == "While-statement" || name == "If-statement" )
 			continue;
+		else if (name == "Expr" || name == "Expression")
+		{
+			followSet[i].insert(";");
+			followSet[i].insert(")");
+			continue;
+		}
 		getFollowSet(vn[i]);
 
 	}
@@ -1032,7 +1048,7 @@ void Grammer::inputAndSolve()
 			  cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << x.tag << endl;
 			  void (Semantic::*xx)() = semantic.func[x.tag];
 			  (semantic.*xx)();
-
+			  
 
 		  }
 		  else

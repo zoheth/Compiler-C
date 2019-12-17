@@ -1,11 +1,11 @@
 int index;
 char ch;
-char a=ch;
+char a;
 int main(){
 	int **a,p;
 	 char b;
 if(a){
-	a;
+	index=a+b*3+44*7*9+99+88;
 }
 else 
 	b; 
