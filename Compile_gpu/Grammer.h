@@ -39,18 +39,19 @@ enum Action_tag {
 	after_while,			//12
 	while_begin,			//13
 	while_end,				//14
-	add_or_sub,
-	mul_or_div,
-	compare_op,
-	equla_op,
-	logic_op,
+	imm_num,
+	var_value,
+	pk_assign,
+	pk_add,
+	pk_mul,
+	back
 };
 enum ItemType
 {VT = 0,VN = 1,Action = 2};
 struct Item
 {
 	ItemType type;
-	string name;
+	string name; 
 	int tag;		//给语义动作备用
 };
 struct Production

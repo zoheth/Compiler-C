@@ -13,9 +13,9 @@ if-end-rec
 after-while
 while-begin
 while-end
-assign
-add_or_sub
-mul_or_div
-compare_op
-equla_op
-logic_op
+imm-num
+var-value
+pk-assign
+pk-add
+pk-mul
+back

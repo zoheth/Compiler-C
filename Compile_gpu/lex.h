@@ -6,10 +6,10 @@ using namespace std;
 extern enum {
 	GPU, LEA, IMM, JMP, CALL, JZ, JNZ, ENT, ADJ, LEV, LI, LC, SI, SC, PUSH,
 	OR, XOR, AND, EQ, NE, LT, GT, LE, GE, SHL, SHR, ADD, SUB, MUL, DIV, MOD,
-	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT
+	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT,GMALC
 };
 extern enum Token_tag {
-	Num = 128, Fun, Sys, Glo, Loc,
+	Num = 128, Fun, Sys, Glo,Gpu,Loc,Dev,
 	Int_const, Char_const,
 	Id, Char, String, Else, Enum, If, Int, Return, Sizeof, While, Void, //对应关键字查询表 Id定位
 	Assign, Add, Sub, Mul, Div, Open_paren, Close_paren, Open_curly, Close_curly, Comma, Semicolon, 		  //对应界符查询表 Assign定位

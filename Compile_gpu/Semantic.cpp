@@ -120,10 +120,128 @@ void Semantic::while_end() {
 	*code_text = (int)mark_a;
 	*mark_b = (int)(code_text + 1);
 }
-//void Semantic::gpu_parameter_rec() {
-//	code_text++;
-//	*code_text = IMM;
-//}
+void Semantic::imm_num() {
+	code_text++;
+	*code_text = IMM;
+	code_text++;
+	*code_text = prev_token.value;
+	expr_type = INT;
+}
+void Semantic::pk_assign() {
+	if (prev_token.id >= level.top()) {
+		if (*code_text == LC || *code_text == LI) {
+			*code_text = PUSH; // save the lvalue's pointer
+		}
+		else {
+			throw "赋值错误";
+		}
+		level.push(Assign);
+	}
+}
+
+void Semantic::pk_add() {
+	code_text++;
+	*code_text = PUSH;
+	level.push(Add);
+}
+void Semantic::pk_mul() {
+	code_text++;
+	*code_text = PUSH;
+	level.push(Mul);
+}
+void Semantic::back() {
+	while (!level.empty()&&level.top()>token.id) {
+		int temp = level.top();
+		level.pop();
+		if (temp == Assign) {
+			//expr_type
+			code_text++;
+			*code_text = (expr_type == CHAR) ? SC : SI;
+		}
+		else if (temp == Add) {
+			code_text++;
+			*code_text = ADD;
+		}
+		else if (temp == Mul) {
+			code_text++;
+			*code_text = Mul;
+		}
+	}
+}
+
+void Semantic::gpu_parameter_rec() {
+	CUR_ID->Bcalss = CUR_ID->class_;
+	CUR_ID->class_ = Dev;
+	CUR_ID->Btype = CUR_ID->type;
+	CUR_ID->type = type;
+	CUR_ID->Bvalue = CUR_ID->value;
+	CUR_ID->value = params;  //
+	params++;
+}
+
+void Semantic::call_init() {
+	adj_size = 0;
+	the_func_id = CUR_ID;
+}
+void Semantic::load_param() {
+	if (the_func_id->class_ == Gpu) {
+
+	}
+	code_text++;
+	*code_text = PUSH;
+	adj_size++;
+}
+void Semantic::var_value() {
+	if (CUR_ID->type == Num) {
+		code_text++;
+		*code_text = IMM;
+		code_text++;
+		*code_text = CUR_ID->value;
+	}
+	else if (CUR_ID->class_ == Loc) {
+		code_text++;
+		*code_text = LEA;
+		code_text++;
+		*code_text = CUR_ID->value - pos_local;
+	}
+	else if (CUR_ID->class_ == Glo) {
+		code_text++;
+		*code_text = IMM;
+		code_text++;
+		*code_text = CUR_ID->value;
+	}
+}
+void Semantic::call() {
+	if (the_func_id->class_ == Sys) {
+		code_text++;
+		*code_text = the_func_id->value;
+	}
+	else if (the_func_id->class_ == Fun) {
+		code_text++;
+		*code_text = CALL;
+		code_text++;
+		*code_text = the_func_id->value;
+	}
+	else if (the_func_id->class_ == Gpu) {
+		
+	}
+	else {
+		throw "非法函数";
+	}
+	if(adj_size>0){
+		code_text++;
+		*code_text = ADJ;
+		code_text++;
+		*code_text = adj_size;
+	}
+	expr_type = the_func_id->type;//??????
+}
+
+void Semantic::gpu_load() {
+
+}
+
+
 void Semantic::push() {
 	func.push_back(&Semantic::add_ptr);					//0
 	func.push_back(&Semantic::ident_rec);				//1
@@ -140,10 +258,12 @@ void Semantic::push() {
 	func.push_back(&Semantic::after_while);				//12
 	func.push_back(&Semantic::while_begin);				//13
 	func.push_back(&Semantic::while_end);				//14
-	func.push_back(&Semantic::load_num);
-	func.push_back(&Semantic::load_num);
-	func.push_back(&Semantic::load_num);
-	func.push_back(&Semantic::load_num);
-	func.push_back(&Semantic::load_num);
-	func.push_back(&Semantic::load_num);
+	func.push_back(&Semantic::imm_num);
+	func.push_back(&Semantic::var_value);
+	func.push_back(&Semantic::pk_assign);
+	func.push_back(&Semantic::pk_add);
+	func.push_back(&Semantic::pk_mul);
+	func.push_back(&Semantic::back);
 }
+
+

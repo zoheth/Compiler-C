@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <stack>
 #include "lex.h"
 using namespace std;
 
@@ -16,6 +17,11 @@ class Semantic {
 	int params;
 	int index_of_bp;
 	int pos_local;
+	int expr_type;
+	Identifier *the_func_id;
+	stack<int>level;
+	int adj_size;
+	int gpu_data_dm;
 	int *mark_a;
 	int *mark_b; //只用两个标记 if和while共用 所以不能嵌套
 
@@ -51,6 +57,17 @@ public:
 	void after_while();
 	void while_begin();
 	void while_end();
-	void load_num();
+	
+	void imm_num();
+	void pk_assign();
+	void pk_add();
+	void pk_mul();
+	void back();
+	void gpu_parameter_rec();
+	void call_init();
+	void load_param();
+	void call();
+	void var_value();
+	void gpu_load();
 	void push();
 };
