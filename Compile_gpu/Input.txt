@@ -21,23 +21,7 @@ Body-decl_2->Statement Body-decl_2 |@
 Statement->If-statement |While-statement |{ Statement } |return Expression ; <leave>|Expression ; 
 If-statement->if ( Logical-expression ) <if-begin>Statement else <else-begin>Statement <if-end-rec> 
 While-statement->while <after-while>( Logical-expression ) <while-begin>Statement <while-end> 
-Value->Item Value_1 
-Value_1->Arith-op_1 Item <add_or_sub>Value_1 |@ 
-Item->Factor Item_1 
-Item_1->Arith-op_2 Factor <mul_or_div>Item_1 |@ 
-Arith-op_1->+ |- 
-Arith-op_2->* |/ 
-Factor->( Value ) |Const |id 
-Const->int_const |char_const 
-Expression->Value Operation 
-Operation->Compare-op Value <compare_op>|Equal-op Value <equla_op> |@ 
-Compare-op->> |>= |>> |>>= |== |!= 
-Equal-op->= |+= |-= 
-Logical-expression->Expression Bool-expression 
-Bool-expression->Logic-op Expression <logic_op>Bool-expression |@ 
-Logic-op->&& |^^ 
- 
-
-
+Expression->num <imm-num>Expr|id <var-value>Expr |( Expression ) 
+Expr->= <pk-assign>Expression <back>|+ <pk-add>Expression <back>|* <pk-mul>Expression <back>|@ 
 
 
