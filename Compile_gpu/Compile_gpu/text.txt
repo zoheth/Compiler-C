@@ -1,0 +1,20 @@
+int index;
+char ch;
+char a;
+int add(int a,int b){
+	return a+b;
+}
+int main(){
+	int **a,p;
+	 char b;
+if(a<100){
+	index=(a+b*((3+44)*7*9+99)+88);
+}
+else 
+	b; 
+while(index!=300){
+	ch=add(p,p);
+	
+}
+return 0;
+}
