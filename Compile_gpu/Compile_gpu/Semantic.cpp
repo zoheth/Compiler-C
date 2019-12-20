@@ -10,11 +10,9 @@ int *main_addr = NULL;
 Semantic::Semantic() {
 	cur_id_index = -1;
 	code_text = asm_text;
-	the_func_id = NULL;
 	not_main = 1;
 	/////////////
 	cur_data = asm_data;
-	adj_size = 0;
 	level.push(0);
 }
 void Semantic::ident_rec() {
@@ -92,8 +90,9 @@ void Semantic::loc_var_rec() {
 	CUR_ID->Btype = CUR_ID->type;
 	CUR_ID->type = type;
 	CUR_ID->Bvalue = CUR_ID->value;
-	CUR_ID->value = pos_local;
-	pos_local++;  //是否有必要换变量，或者是否有必要新建这个函数
+	
+	CUR_ID->value =++ pos_local;
+	 //是否有必要换变量，或者是否有必要新建这个函数
 }
 void Semantic::func_enter() {
 	//写入函数开始标记
@@ -102,12 +101,11 @@ void Semantic::func_enter() {
 	code_text++;
 	*code_text = pos_local - params-1;
 }
+
 void Semantic::leave() {
-	not_main--;
-	if (not_main) {
-		code_text++;
-		*code_text = LEV;
-	}
+	
+	code_text++;
+	*code_text = LEV;
 	
 	//else {
 	//	code_text++;
@@ -412,16 +410,16 @@ void Semantic::gpu_parameter_rec() {
 }
 
 void Semantic::call_init() {
-	adj_size = 0;
-	the_func_id = CUR_ID;
+	adj_size.push(0);
+	the_func_id.push (CUR_ID);
 }
 void Semantic::load_param() {
-	if (the_func_id->class_ == Gpu) {
+	if (the_func_id.top()->class_ == Gpu) {
 
 	}
 	code_text++;
 	*code_text = PUSH;
-	adj_size++;
+	adj_size.top()++;
 }
 void Semantic::var_value() {
 	if (CUR_ID->type == Num) {
@@ -451,29 +449,31 @@ void Semantic::var_value() {
 	*code_text = (expr_type == CHAR) ? LC : LI;
 }
 void Semantic::call() {
-	if (the_func_id->class_ == Sys) {
+	if (the_func_id.top()->class_ == Sys) {
 		code_text++;
-		*code_text = the_func_id->value;
+		*code_text = the_func_id.top()->value;
 	}
-	else if (the_func_id->class_ == Fun) {
+	else if (the_func_id.top()->class_ == Fun) {
 		code_text++;
 		*code_text = CALL;
 		code_text++;
-		*code_text = the_func_id->value;
+		*code_text = the_func_id.top()->value;
 	}
-	else if (the_func_id->class_ == Gpu) {
+	else if (the_func_id.top()->class_ == Gpu) {
 		
 	}
 	/*else {
 		throw "非法函数";
 	}*/
-	if(adj_size>0){
+	if(adj_size.top()>0){
 		code_text++;
 		*code_text = ADJ;
 		code_text++;
-		*code_text = adj_size;
+		*code_text = adj_size.top();
+		adj_size.pop();
 	}
-	expr_type = the_func_id->type;//??????
+	expr_type = the_func_id.top()->type;//??????
+	the_func_id.pop();
 }
 
 void Semantic::gpu_load() {

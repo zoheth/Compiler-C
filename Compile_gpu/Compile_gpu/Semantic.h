@@ -21,9 +21,9 @@ class Semantic {
 	int pos_local;
 	int expr_type;
 	int not_main;
-	Identifier *the_func_id;
 	stack<int>level;
-	int adj_size;
+	stack<int> adj_size;
+	stack<Identifier *> the_func_id;
 	int gpu_data_dm;
 	int *addr;
 	int *mark_a;
@@ -49,6 +49,7 @@ public:
 	void loc_index_rec();
 	void loc_var_rec();
 	void func_enter();//写入函数开始标记
+	void fun_end();
 	void leave();
 	void if_begin();
 	void else_begin();

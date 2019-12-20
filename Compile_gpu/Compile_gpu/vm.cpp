@@ -7,165 +7,169 @@
 #include <algorithm>
 
 VM::VM() {
-	poolsize = 1000;
+	poolsize = 1000000;
 	stack = (int *)malloc(poolsize);
 	memset(stack, 0, poolsize);
 	sp = (int *)((int)stack + poolsize);
 	*--sp = EXIT; // call exit if main returns
-	*--sp = PUSH; tmp = sp;
+	cout << "TTTTTTEEEEEMMMMMPPPPPP: " << (int )sp << endl;
+	*--sp = PUSH; 
+	tmp = sp;
+	*--sp = (int)tmp;
 	bp = (int *)((int)stack + poolsize);
 	pc = main_addr;
 	out = asm_text+1;
 	flag = 1;
 }
-void VM::print() {
-	int i = *out;
-	out++;
-	switch (i)
-	{
-	case PUSH: {
-		cout << (int)(out-1)<<">: "<<"PUSH" << endl;
-		break;
-	}
-	case IMM: {
-		cout << (int)(out-1)<<">: "<<"IMM\t" << *out << endl;
+void VM::print(int returns) {
+	
+	while (returns > 0) {
+		int i = *out;
 		out++;
-		break;
+		switch (i)
+		{
+		case PUSH: {
+			cout << (int)(out - 1) << ">: " << "PUSH" << endl;
+			break;
+		}
+		case IMM: {
+			cout << (int)(out - 1) << ">: " << "IMM\t" << *out << endl;
+			out++;
+			break;
+		}
+		case LC: {
+			cout << (int)(out - 1) << ">: " << "LC" << endl;
+			break;
+		}
+		case LI: {
+			cout << (int)(out - 1) << ">: " << "LI" << endl;
+			break;
+		}
+		case SC: {
+			cout << (int)(out - 1) << ">: " << "SC" << endl;
+			break;
+		}
+		case SI: {
+			cout << (int)(out - 1) << ">: " << "SI" << endl;
+			break;
+		}
+		case JMP: {
+			cout << (int)(out - 1) << ">: " << "JMP\t" << *out << endl;
+			out++;
+			break;
+		}
+		case JZ: {
+			cout << (int)(out - 1) << ">: " << "JZ\t" << *out << endl;
+			out++;
+			break;
+		}
+		case JNZ: {
+			cout << (int)(out - 1) << ">: " << "JNZ\t" << *out << endl;
+			out++;
+			break;
+		}
+		case ADD: {
+			cout << (int)(out - 1) << ">: " << "ADD" << endl;
+			break;
+		}
+		case SUB: {
+			cout << (int)(out - 1) << ">: " << "SUB" << endl;
+			break;
+		}
+		case MUL: {
+			cout << (int)(out - 1) << ">: " << "MUL" << endl;
+			break;
+		}
+		case DIV: {
+			cout << (int)(out - 1) << ">: " << "DIV" << endl;
+			break;
+		}
+		case AND: {
+			cout << (int)(out - 1) << ">: " << "AND" << endl;
+			break;
+		}
+		case OR: {
+			cout << (int)(out - 1) << ">: " << "OR" << endl;
+			break;
+		}
+		case EQ: {
+			cout << (int)(out - 1) << ">: " << "EQ" << endl;
+			break;
+		}
+		case NE: {
+			cout << (int)(out - 1) << ">: " << "NE" << endl;
+			break;
+		}
+		case MOD: {
+			cout << (int)(out - 1) << ">: " << "MOD" << endl;
+			break;
+		}
+		case SHR: {
+			cout << (int)(out - 1) << ">: " << "SHR" << endl;
+			break;
+		}
+		case SHL: {
+			break;
+		}
+		case GT: {
+			cout << (int)(out - 1) << ">: " << "GT" << endl;
+			break;
+		}
+		case GE: {
+			cout << (int)(out - 1) << ">: " << "GE" << endl;
+			break;
+		}
+		case LT: {
+			cout << (int)(out - 1) << ">: " << "LT" << endl;
+			break;
+		}
+		case LE: {
+			cout << (int)(out - 1) << ">: " << "LE" << endl;
+			break;
+		}
+		case XOR: {
+			cout << (int)(out - 1) << ">: " << "XOR" << endl;
+			break;
+		}
+				  //函数调用指令
+		case CALL: {
+			cout << (int)(out - 1) << ">: " << "CALL\t" << *out << endl;
+			out++;
+			break;
+		}
+		case ENT: {
+			cout << endl;
+			cout << (int)(out - 1) << ">: " << "ENT\t" << *out << endl;
+			out++;
+			break;
+		}
+		case ADJ: {
+			cout << (int)(out - 1) << ">: " << "ADJ\t" << *out << endl;
+			out++;
+			break;
+		}
+		case LEV: {
+			cout << (int)(out - 1) << ">: " << "LEV" << endl;
+			returns--;
+			break;
+		}
+		case LEA: {
+			cout << (int)(out - 1) << ">: " << "LEA\t" << *out << endl;
+			out++;
+			break;
+		}
+				  //内置函数
+		case EXIT: {
+			cout << (int)(out - 1) << ">: " << "EXIT" << endl;
+			printf("exit(%d)", *sp);
+			return;
+		}
+		case PRTF: {
+			cout << (int)(out - 1) << ">: " << "PRTF" << endl;
+			break;
+		}
+		}
 	}
-	case LC: {
-		cout << (int)(out-1)<<">: "<<"LC" << endl;
-		break;
-	}
-	case LI: {
-		cout << (int)(out-1)<<">: "<<"LI" << endl;
-		break;
-	}
-	case SC: {
-		cout << (int)(out-1)<<">: "<<"SC" << endl;
-		break;
-	}
-	case SI: {
-		cout << (int)(out-1)<<">: "<<"SI" << endl;
-		break;
-	}
-	case JMP: {
-		cout << (int)(out-1)<<">: "<<"JMP\t" << *out << endl;
-		out++;
-		break;
-	}
-	case JZ: {
-		cout << (int)(out-1)<<">: "<<"JZ\t" << *out << endl;
-		out++;
-		break;
-	}
-	case JNZ: {
-		cout << (int)(out-1)<<">: "<<"JNZ\t" << *out << endl;
-		out++;
-		break;
-	}
-	case ADD: {
-		cout << (int)(out-1)<<">: "<<"ADD" << endl;
-		out++;
-		break;
-	}
-	case SUB: {
-		cout << (int)(out-1)<<">: "<<"SUB" << endl;
-		break;
-	}
-	case MUL: {
-		cout << (int)(out-1)<<">: "<<"MUL" << endl;
-		break;
-	}
-	case DIV: {
-		cout << (int)(out-1)<<">: "<<"DIV" << endl;
-		break;
-	}
-	case AND: {
-		cout << (int)(out-1)<<">: "<<"AND" << endl;
-		break;
-	}
-	case OR: {
-		cout << (int)(out-1)<<">: "<<"OR" << endl;
-		break;
-	}
-	case EQ: {
-		cout << (int)(out-1)<<">: "<<"EQ" << endl;
-		break;
-	}
-	case NE: {
-		cout << (int)(out-1)<<">: "<<"NE" << endl;
-		break;
-	}
-	case MOD: {
-		cout << (int)(out-1)<<">: "<<"MOD" << endl;
-		break;
-	}
-	case SHR: {
-		cout << (int)(out-1)<<">: "<<"SHR" << endl;
-		break;
-	}
-	case SHL: {
-		break;
-	}
-	case GT: {
-		cout << (int)(out-1)<<">: "<<"GT" << endl;
-		break;
-	}
-	case GE: {
-		cout << (int)(out-1)<<">: "<<"GE" << endl;
-		break;
-	}
-	case LT: {
-		cout << (int)(out-1)<<">: "<<"LT" << endl;
-		break;
-	}
-	case LE: {
-		cout << (int)(out-1)<<">: "<<"LE" << endl;
-		break;
-	}
-	case XOR: {
-		cout << (int)(out-1)<<">: "<<"XOR" << endl;
-		break;
-	}
-			  //函数调用指令
-	case CALL: {
-		cout << (int)(out-1)<<">: "<<"CALL\t" << *out << endl;
-		out++;
-		break;
-	}
-	case ENT: {
-		cout <<endl;
-		cout << (int)(out-1)<<">: "<<"ENT\t" << *out << endl;
-		out++;
-		break;
-	}
-	case ADJ: {
-		cout << (int)(out-1)<<">: "<<"ADJ\t" << *out << endl;
-		out++;
-		break;
-	}
-	case LEV: {
-		cout << (int)(out-1)<<">: "<<"LEV" << endl;
-		out++;
-		break;
-	}
-	case LEA: {
-		cout << (int)(out-1)<<">: "<<"LEA\t" << *out << endl;
-		out++;
-		break;
-	}
-			  //内置函数
-	case EXIT: {
-		cout << (int)(out-1)<<">: "<<"EXIT" << endl;
-		printf("exit(%d)", *sp);
-		return;
-	}
-	case PRTF: {
-		cout << (int)(out-1)<<">: "<<"PRTF" << endl;
-		break;
-	}
-	}
-	print();
 	return;
 }
 void VM::step(int i) {
@@ -179,14 +183,6 @@ void VM::step(int i) {
 		*--sp = ax;
 		break;
 	}
-			   //case POP: {
-			   //int popvalue = Stack[--sp];
-			   //cout << popvalue << endl;
-			   //int popvlaue = S.top();
-			   //S.pop();
-			   //pc++;
-			   //break;
-			   //}
 	case IMM: {
 		ax = *pc++;
 		break;

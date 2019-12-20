@@ -139,6 +139,6 @@ public:
 	VM();
 	int fetch();
 	int run();
-	void print();
+	void print(int i);
 };
 #endif 

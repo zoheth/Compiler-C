@@ -2,22 +2,14 @@ int fibonacci(int i) {
 	if (i < 2) {
 		return 1;
 	}
-	else{
-		return fibonacci(i - 1) + fibonacci(i - 2);
+	else {
+		return (fibonacci(i-1)+1) ;
 	}
-	
+
 }
 
 int main()
 {
-	int i;
-	int res;
-	i = 0;
-	while (i < 10) {
-		res = fibonacci(i);
-		print(res);
-		i = i + 1;
-		print(i);
-	}
+	print(fibonacci(2));
 	return 0;
 }

@@ -14,16 +14,16 @@ Decl_2->, Pointer id <loc-var-rec>Decl_2 |@
 Decl_3->, Type Pointer id <parameter-rec>Decl_3 |@ 
 Pointer->* Pointer <add_pointer>|@ 
 Type->char <update_type>|void <update_type>|int <update_type> 
-Body-decl-><loc-index-rec>Body-decl_1 <func-enter>Body-decl_2  
+Body-decl-><loc-index-rec>Body-decl_1 <func-enter>Body-decl_2  <leave> 
 Body-decl_1->Variable-decl Body-decl_1 |@ 
 Body-decl_2->Statement_1 
-Statement->If-statement |While-statement |{ Statement_1 } |return Expression ; <leave>|Expression <back>; 
+Statement->If-statement |While-statement |{ Statement_1 } |return Expression <leave>; |Expression <back>; 
 Statement_1->Statement Statement_1|@ 
 If-statement->if ( Expression <back>) <if-begin>Statement else <else-begin>Statement <if-end-rec> 
 While-statement->while <after-while>( Expression <back>) <while-begin>Statement <while-end> 
 Expression->int_const <imm-num>Expr |id <var-value> IDN Expr |( <pk-paren>Expression <back-1>) Expr |R_Pointer 
 Expr->= <pk-assign>Expression <back>|+ <pk-add>Expression <back>|- <pk-sub>Expression <back>|* <pk-mul>Expression <back>|/ <pk-div>Expression <back>|&& <pk-lan>Expression <back>|^^ <pk-lor>Expression <back>|> <pk-gt>Expression <back>|>> <pk-lt>Expression <back>|== <pk-eq>Expression <back>|!= <pk-neq>Expression <back>|@ 
-Func-call-><call-init>( Run-params ) <call> 
+Func-call-><call-init>( Run-params <call>) 
 Run-params->Expression <load-param>Params |@ 
 Params->, Expression <load-param>Params |@ 
 R_Pointer->* R_Pointer_1 R_Pointer_2 Expr 
