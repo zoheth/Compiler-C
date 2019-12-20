@@ -23,7 +23,7 @@ If-statement->if ( Expression <back>) <if-begin>Statement else <else-begin>State
 While-statement->while <after-while>( Expression <back>) <while-begin>Statement <while-end> 
 Expression->int_const <imm-num>Expr |id <var-value> IDN Expr |( <pk-paren>Expression <back-1>) Expr |R_Pointer 
 Expr->= <pk-assign>Expression <back>|+ <pk-add>Expression <back>|- <pk-sub>Expression <back>|* <pk-mul>Expression <back>|/ <pk-div>Expression <back>|&& <pk-lan>Expression <back>|^^ <pk-lor>Expression <back>|> <pk-gt>Expression <back>|>> <pk-lt>Expression <back>|== <pk-eq>Expression <back>|!= <pk-neq>Expression <back>|@ 
-Func-call-><call-init>( Run-params <call>) 
+Func-call-><call-init>( <pk-paren>Run-params <call> <back-1>) 
 Run-params->Expression <load-param>Params |@ 
 Params->, Expression <load-param>Params |@ 
 R_Pointer->* R_Pointer_1 R_Pointer_2 Expr 

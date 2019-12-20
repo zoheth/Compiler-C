@@ -3,13 +3,20 @@ int fibonacci(int i) {
 		return 1;
 	}
 	else {
-		return (fibonacci(i-1)+1) ;
+		return fibonacci(i - 1) + fibonacci(i - 2);
 	}
 
 }
 
 int main()
 {
-	print(fibonacci(2));
+	int i;
+	int res;
+	i = 0;
+	while (i < 11) {
+		res = fibonacci(i);
+		print(res);
+		i = i + 1;
+	}
 	return 0;
 }
