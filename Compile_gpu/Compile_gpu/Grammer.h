@@ -121,4 +121,24 @@ public:
 	string next();				   //取下一个token
 
 };
+
+
+class VM {
+private:
+	int ax = 0;//ax寄存器
+	int *bp,//寻址指针
+		*pc,//程序指针
+		*sp,//堆栈指针
+		*out;
+	int *tmp;
+	int *stack;
+	int  poolsize;
+	void step(int i);
+	int flag;
+public:
+	VM();
+	int fetch();
+	int run();
+	void print();
+};
 #endif 

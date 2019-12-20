@@ -4,22 +4,41 @@
 #include "lex.h"
 #include "Semantic.h"
 using namespace std;
-
+int *asm_text;
+int *asm_data;
+int *main_addr = NULL;
+Semantic::Semantic() {
+	cur_id_index = -1;
+	code_text = asm_text;
+	the_func_id = NULL;
+	not_main = 1;
+	/////////////
+	cur_data = asm_data;
+	adj_size = 0;
+	level.push(0);
+}
 void Semantic::ident_rec() {
 	//CUR_ID = &(*IDENTS)[CUR_ID_index + 1];//下一个id
 	//CUR_ID_index++;
 	//CUR_ID在此之前就已经更新 更新id不需要查找 直接下一个
 	CUR_ID->type = type;
-	if (token == '(') {  //此时的token为下一个token
+	if (token == Open_paren) {  //此时的token为下一个token
 		CUR_ID->class_ = Fun;
 		CUR_ID->value = int(code_text + 1);		//！！！！函数地址,暂时未确定形式
-												//！！！！代码地址自增
+		params = 0;
+		if (CUR_ID->name == "main"){
+			main_addr = (int *)CUR_ID->value;
+			int not_main=0;
+		}
+		else {
+			not_main++;
+		}
 	}
 	else {
 		CUR_ID->class_ = Glo; //全局变量
 		CUR_ID->value = (int)cur_data;		//！！！！该数据的地址
 											//！！！！数据地址自增
-		cur_data++;
+		cur_data=cur_data+sizeof(int);
 	}
 	while (type >= PTR) {
 		type -= PTR;
@@ -44,9 +63,9 @@ void Semantic::id_to_glo() {  //变量回归调用之前的值
 	vector<Identifier>::iterator iter;
 	for (iter = IDENTS->begin(); iter != IDENTS->end(); iter++) {
 		if (iter->class_ == Loc) {
-			/*iter->class_ = iter->Bcalss;
+			iter->class_ = iter->Bcalss;
 			iter->type = iter->Btype;
-			iter->value = iter->Bvalue;*/
+			iter->value = iter->Bvalue;
 			;
 		}
 	}
@@ -84,8 +103,16 @@ void Semantic::func_enter() {
 	*code_text = pos_local - params-1;
 }
 void Semantic::leave() {
-	code_text++;
-	*code_text = LEV;
+	not_main--;
+	if (not_main) {
+		code_text++;
+		*code_text = LEV;
+	}
+	
+	//else {
+	//	code_text++;
+	//	*code_text = EXIT;
+	//}
 }
 void Semantic::if_begin() {
 	code_text++;
@@ -314,6 +341,63 @@ void Semantic::back_a() {
 			code_text++;
 			*code_text = MUL;
 		}
+		else if (temp == Sub)
+		{
+			code_text++;
+			*code_text = SUB;
+		}
+		else if (temp == Div)
+		{
+			code_text++;
+			*code_text = DIV;
+		}
+		else if (temp == Lan)
+		{
+
+			*addr = (int)(code_text + 1);
+			expr_type = INT;
+		}
+		else if (temp == Lor)
+		{
+			*addr = (int)(code_text + 1);
+			expr_type = INT;
+		}
+		else if (temp == Eq)
+		{
+			code_text++;
+			*code_text = EQ;
+			expr_type = INT;
+		}
+		else if (temp == Ne)
+		{
+			code_text++;
+			*code_text = NE;
+			expr_type = INT;
+		}
+		else if (temp == Gt)
+		{
+			code_text++;
+			*code_text = GT;
+			expr_type = INT;
+		}
+		else if (temp == Lt)
+		{
+			code_text++;
+			*code_text = LT;
+			expr_type = INT;
+		}
+		else if (temp == And)
+		{
+			code_text++;
+			*code_text = AND;
+			expr_type = INT;
+		}
+		else if (temp == Or)
+		{
+			code_text++;
+			*code_text = OR;
+			expr_type = INT;
+		}
 	}
 }
 
@@ -345,12 +429,13 @@ void Semantic::var_value() {
 		*code_text = IMM;
 		code_text++;
 		*code_text = CUR_ID->value;
+		expr_type = INT;
 	}
 	else if (CUR_ID->class_ == Loc) {
 		code_text++;
 		*code_text = LEA;
 		code_text++;
-		*code_text = CUR_ID->value - pos_local;
+		*code_text = params+1-CUR_ID->value;
 	}
 	else if (CUR_ID->class_ == Glo) {
 		code_text++;
@@ -358,6 +443,12 @@ void Semantic::var_value() {
 		code_text++;
 		*code_text = CUR_ID->value;
 	}
+	else {
+		return;
+	}
+	//expr_type = the_func_id->type;
+	code_text++;
+	*code_text = (expr_type == CHAR) ? LC : LI;
 }
 void Semantic::call() {
 	if (the_func_id->class_ == Sys) {

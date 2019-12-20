@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include "lex.h"
+#define SYS_IDX 10
 using namespace std;
 
 /*
@@ -72,6 +73,12 @@ vector<Token> token_s;
 void Lex::init() {
 	//这里的次序必须和enum中的相同
 	//Id,Char,String,Else,Enum,If,Ine,Return,Sizeof,While,
+	Identifier ident;
+	ident.name = "print";
+	ident.class_ = Sys;
+	ident.value = PRTF;
+	ident.token = Id;
+	IDENTS.push_back(ident);
 	K.push_back("char");
 	K.push_back("string");
 	K.push_back("else");
@@ -82,6 +89,10 @@ void Lex::init() {
 	K.push_back("sizeof");
 	K.push_back("while");
 	K.push_back("void");
+//10	
+	K.push_back("printf");
+	K.push_back("malloc");
+	K.push_back("exit");
 
 
 	P.push_back("+");
@@ -95,7 +106,7 @@ void Lex::init() {
 	P.push_back("{");
 	P.push_back("}");
 	P.push_back(",");
-	P.push_back(";");	
+	P.push_back(";");
 }
 Lex::Lex() {
 	text = "";

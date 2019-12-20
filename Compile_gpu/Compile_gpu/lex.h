@@ -5,7 +5,7 @@ using namespace std;
 extern enum {
 	GPU, LEA, IMM, JMP, CALL, JZ, JNZ, ENT, ADJ, LEV, LI, LC, SI, SC, PUSH,
 	OR, XOR, AND, EQ, NE, LT, GT, LE, GE, SHL, SHR, ADD, SUB, MUL, DIV, MOD,
-	OPEN, READ, CLOS, PRTF, MALC, MSET, MCMP, EXIT
+	PRTF, MALC, MSET, MCMP, EXIT
 };
 /*extern enum Token_tag {
 	Num = 128, Fun, Sys, Glo, Loc,
@@ -25,8 +25,6 @@ extern enum Token_tag {
 extern enum {
 	VOID, INT, CHAR, PTR
 };
-static int *asm_text;
-static int *asm_data;
 class Token {
 public:
 	int id;		//id就是上面的enum ~ ; { } ( ) ] , :的id是本身

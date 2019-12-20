@@ -148,6 +148,8 @@ void Grammer::getFirstSet(Item target)
 	int tag = 0;
 	int flag = 0;
 	//cout << "T:" << T << endl;
+	if (target.name == "Body-decl_2")
+		cout << "来了！" << endl;
 	for (int i = 0; i < T; i++)
 	{
 		flag = 0;
@@ -189,6 +191,8 @@ void Grammer::getFirstSet(Item target)
 					{
 
 						//cout << "递归：" << productions[i].right[j].name << endl;
+						//if (getVNindex(target) < getVNindex(productions[i].right[j]))
+
 						getFirstSet(productions[i].right[j]);
 
 						set<string>::iterator it;
@@ -204,6 +208,7 @@ void Grammer::getFirstSet(Item target)
 
 							}
 							else
+
 								firstSet[getVNindex(target)].insert(*it);//将FIRST(Y)中的非$就加入FIRST(X)
 						}
 						//cout << endl;
@@ -236,7 +241,14 @@ void Grammer::getFirstSet(Item target)
 				return;
 		}
 	}
+	int index = getVNindex(target);
+	cout << target.name << " " << firstSet[index].size() << "--->";
 
+	for (set<string>::iterator it = firstSet[index].begin(); it != firstSet[index].end(); it++)
+	{
+		cout << (*it) << " ";
+	}
+	cout << endl;
 }
 /*
 void Grammer::getFollowSet(Item target)
@@ -459,16 +471,17 @@ void Grammer::getFollowSet(Item target)
 }
 void Grammer::createFirstSet()
 {
-	//cout << vn.size();
+	cout << "FIRST SET:" << endl;
 	for (int i = 0; i < vn.size(); i++)
 	{
-		//cout << vn[i].name << endl;
+		cout << "开始FIRST！" << vn[i].name << endl;
+
 		getFirstSet(vn[i]);
 
 	}
-	/*
-	cout << "FIRST SET:" << endl;
-	for (int i = 0; i < vn.size(); i++)
+
+	//cout << "FIRST SET:" << endl;
+	/*for (int i = 0; i < vn.size(); i++)
 	{
 		cout << vn[i].name << ": ";
 		set<string>::iterator it;
@@ -477,6 +490,7 @@ void Grammer::createFirstSet()
 		cout << endl;
 
 	}*/
+	cout << "FIRST SUCCESS!";
 }
 void Grammer::createFollowSet()
 {
@@ -496,7 +510,7 @@ void Grammer::createFollowSet()
 	{
 		cout << "开始建立" << vn[i].name << endl;
 		string name = vn[i].name;
-		if (name == "Statement" || name == "While-statement" || name == "If-statement")
+		/*if (name == "Statement" || name == "While-statement" || name == "If-statement" )
 			continue;
 		/*else if (name == "Expr" || name == "Expression")
 		{
@@ -1046,8 +1060,8 @@ void Grammer::runParserLL1()		//语法分析
 			cout << x.name << x.tag << "mark 3" << endl;
 			cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << x.tag << endl;
 			void (Semantic::*xx)() = semantic.func[x.tag];
-			(semantic.*xx)();
-			
+			 (semantic.*xx)();
+			 
 
 		}
 		else

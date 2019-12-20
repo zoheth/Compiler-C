@@ -1,20 +1,23 @@
-int index;
-char ch;
-char a;
-int add(int a,int b){
-	return a+b;
-}
-int main(){
-	int **a,p;
-	 char b;
-if(a<100){
-	index=(a+b*((3+44)*7*9+99)+88);
-}
-else 
-	b; 
-while(index!=300){
-	ch=add(p,p);
+int fibonacci(int i) {
+	if (i < 2) {
+		return 1;
+	}
+	else{
+		return fibonacci(i - 1) + fibonacci(i - 2);
+	}
 	
 }
-return 0;
+
+int main()
+{
+	int i;
+	int res;
+	i = 0;
+	while (i < 10) {
+		res = fibonacci(i);
+		print(res);
+		i = i + 1;
+		print(i);
+	}
+	return 0;
 }

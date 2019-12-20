@@ -4,7 +4,9 @@
 #include <stack>
 #include "lex.h"
 using namespace std;
-
+extern int *asm_text;
+extern int *asm_data;
+extern int *main_addr;
 class Semantic {
 	int type;
 	int *code_text;
@@ -18,6 +20,7 @@ class Semantic {
 	int index_of_bp;
 	int pos_local;
 	int expr_type;
+	int not_main;
 	Identifier *the_func_id;
 	stack<int>level;
 	int adj_size;
@@ -27,14 +30,7 @@ class Semantic {
 	int *mark_b; //只用两个标记 if和while共用 所以不能嵌套
 
 public:
-	Semantic() {
-		cur_id_index = -1;
-		code_text = asm_text;
-		/////////////
-		cur_data = asm_data;
-		adj_size = 0;
-		level.push(0);
-	}
+	Semantic();
 	void set_ident(vector<Identifier> *i) {
 		IDENTS = i;
 	}

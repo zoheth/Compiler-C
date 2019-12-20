@@ -6,7 +6,6 @@ Indent-decl
 Indent-decl_1
 Function-decl
 G-variable-decl
-Init
 Parameter_decl
 Decl_1
 Variable-decl
@@ -19,6 +18,7 @@ Body-decl
 Body-decl_1
 Body-decl_2
 Statement
+Statement_1
 If-statement
 While-statement
 Expression
@@ -26,3 +26,8 @@ Expr
 Func-call
 Run-params
 Params
+R_Pointer
+R_Pointer_1
+R_Pointer_2
+IDN
+Array
