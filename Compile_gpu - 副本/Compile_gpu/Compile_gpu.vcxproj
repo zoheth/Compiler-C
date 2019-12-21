@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{3AEBB7D7-CF19-4DE6-A9D7-B45A893AD370}</ProjectGuid>
+    <ProjectGuid>{7B5086AB-3C58-4DB2-A820-6E53D59FAC3D}</ProjectGuid>
     <RootNamespace>Compilegpu</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -116,14 +116,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ccc.cpp" />
+    <ClCompile Include="Grammer.cpp" />
     <ClCompile Include="lex.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Semantic.cpp" />
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="vm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Grammer.h" />
     <ClInclude Include="lex.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="text.txt" />
+    <ClInclude Include="Semantic.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

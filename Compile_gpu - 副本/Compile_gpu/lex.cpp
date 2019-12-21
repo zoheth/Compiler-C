@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include "lex.h"
+#define SYS_IDX 10
 using namespace std;
 
 /*
@@ -49,6 +50,7 @@ Token::Token(int i, int v) {
 Token::Token() {
 	id = 0;
 	value = 0;
+
 }
 void Token::set(int i) {
 	id = i;
@@ -71,6 +73,18 @@ vector<Token> token_s;
 void Lex::init() {
 	//这里的次序必须和enum中的相同
 	//Id,Char,String,Else,Enum,If,Ine,Return,Sizeof,While,
+	Identifier ident;
+	ident.name = "print";
+	ident.class_ = Sys;
+	ident.value = PRTF;
+	ident.token = Id;
+	IDENTS.push_back(ident);
+	Identifier ident1;
+	ident.name = "malloc";
+	ident.class_ = Sys;
+	ident.value = MALC;
+	ident.token = Id;
+	IDENTS.push_back(ident);
 	K.push_back("char");
 	K.push_back("string");
 	K.push_back("else");
@@ -81,17 +95,24 @@ void Lex::init() {
 	K.push_back("sizeof");
 	K.push_back("while");
 	K.push_back("void");
+//10	
+	K.push_back("printf");
+	K.push_back("malloc");
+	K.push_back("exit");
+
 
 	P.push_back("+");
 	P.push_back("-");
 	P.push_back("*");
 	P.push_back("/");
+	P.push_back("[");
+	P.push_back("]");
 	P.push_back("(");
 	P.push_back(")");
 	P.push_back("{");
 	P.push_back("}");
 	P.push_back(",");
-	P.push_back(";");	
+	P.push_back(";");
 }
 Lex::Lex() {
 	text = "";
@@ -347,6 +368,27 @@ Token Lex::delimiter_token() {
 		the_token.set(Lt);
 		return the_token;
 	}
+	else if (text[pos] == '~') /*{								//<=
+							   if (pos + 1 < text.size() && text[pos + 1] == '=') {
+							   pos++;
+							   //临时输出
+							   printf("<=\t");
+							   the_token.set(Le);
+							   return the_token;
+							   }
+							   else {
+							   //临时输出
+							   printf("<\t");
+							   the_token.set(Lt);
+							   return the_token;
+							   }
+							   }*/
+	{
+		//临时输出
+		printf("<\t");
+		the_token.set(Xor);
+		return the_token;
+	}
 	else if (text[pos] == '=') {							//==	
 		if (pos + 1 < text.size() && text[pos + 1] == '=') {
 			pos++;
@@ -382,13 +424,13 @@ Token Lex::delimiter_token() {
 			pos++;
 			//临时输出
 			printf("&&\t");
-			the_token.set(And);
+			the_token.set(Lan);
 			return the_token;
 		}
 		else {
 			//临时输出
-			//printf("&\t");
-			throw "未识别的字符";
+			printf("&\t");
+			the_token.set(And);
 			return the_token;
 		}
 	}
@@ -397,13 +439,13 @@ Token Lex::delimiter_token() {
 			pos++;
 			//临时输出
 			printf("||\t");
-			the_token.set(Or);
+			the_token.set(Lor);
 			return the_token;
 		}
 		else {
 			//临时输出
 			printf("|\t");
-			throw "未识别的字符";
+			the_token.set(Or);
 			return the_token;
 		}
 	}
@@ -421,7 +463,7 @@ Token Lex::delimiter_token() {
 	if (res != P.end()) {
 		//临时输出
 		cout << str << '\t';
-		the_token.set(Assign + (res - P.begin())+1);
+		the_token.set(Add+ (res - P.begin()));
 		//the_token.set(Assign + (res - P.begin()));
 		return the_token;
 	}

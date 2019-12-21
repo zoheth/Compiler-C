@@ -22,6 +22,7 @@ class Semantic {
 	stack<int>level;
 	int adj_size;
 	int gpu_data_dm;
+	int *addr;
 	int *mark_a;
 	int *mark_b; //只用两个标记 if和while共用 所以不能嵌套
 
@@ -31,6 +32,7 @@ public:
 		code_text = asm_text;
 		/////////////
 		cur_data = asm_data;
+		adj_size = 0;
 		level.push(0);
 	}
 	void set_ident(vector<Identifier> *i) {
@@ -61,9 +63,24 @@ public:
 	
 	void imm_num();
 	void pk_assign();
+	void pk_paren();
 	void pk_add();
 	void pk_mul();
+	void pk_div();
+	void pk_sub();
+	void pk_land();
+	void pk_lor();
+	void pk_and();
+	void pk_or();
+	void pk_xor();
+	void pk_gt();
+	void pk_lt();
+	void pk_eq();
+	void pk_neq();
 	void back();
+	void back_a();
+	void pk_brak();
+	void back_brak();
 	void gpu_parameter_rec();
 	void call_init();
 	void load_param();

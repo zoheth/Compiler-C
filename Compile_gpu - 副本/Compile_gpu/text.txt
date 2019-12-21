@@ -13,18 +13,9 @@ int fibonacci(int i) {
 int main()
 {
 	int i;
-	int *p;
-	p=(int *)malloc(4*20);
-	i=10;
-	while(i){
-		p[i]=i*i;
-		print(p[i]);
-		i=i-1;
-	}
-	while(i<11){
-		print(*p);
-		p=p+4;
-		i=i+1;
-	}
+	int res;
+	i = 0;
+	i=3*4+2;
+print(i);
 	return 0;
 }

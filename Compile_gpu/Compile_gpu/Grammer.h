@@ -24,7 +24,7 @@ extern enum Token_tag {
 };*/
 
 enum Action_tag {
-	add_ptr=0,				//0
+	add_ptr = 0,				//0
 	ident_rec,				//1
 	id_to_glo,				//2
 	parameter_rec,			//3
@@ -40,6 +40,10 @@ enum Action_tag {
 	while_begin,			//13
 	while_end,				//14
 	imm_num,
+	ptr_init,
+	ptr_inc,
+	ptr_clear,
+	addr_clear,
 	var_value,
 	pk_assign,
 	pk_paren,
@@ -55,9 +59,13 @@ enum Action_tag {
 	pk_neq,
 	back,
 	back_a,
+	array_type_rec,
+	array_ok,
 	call_init,
 	call,
-	load_param
+	load_param,
+	conv_init,
+	conv
 };
 enum ItemType
 {VT = 0,VN = 1,Action = 2};
@@ -114,7 +122,7 @@ public:
 	bool createLL1_Map(); //得到预测表
 	void print_out();//输出
 	void manage(); //综合
-	void runParserLL1();	//语法分析
+	bool runParserLL1();	//语法分析
 	/////////////////////////////动作
 	bool match(Item x);			//匹配
 	void push_right(stack<Item>&SYN,int index);	    //逆向压栈

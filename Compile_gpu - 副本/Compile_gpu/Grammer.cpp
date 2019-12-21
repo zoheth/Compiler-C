@@ -6,9 +6,9 @@ bool Grammer::isNotTerminal(Item c)
 {
 	/*for (int i = 0; i < vn.size(); i++)
 		if (c.name == vn[i].name)*/
-		if(c.type==ItemType::VN)
-			return true;
-		return false;
+	if (c.type == ItemType::VN)
+		return true;
+	return false;
 }
 bool Grammer::isTerminal(Item c)
 {
@@ -75,7 +75,7 @@ void Grammer::setType()
 	for (int i = 0; i < T; i++)
 	{
 		int size = productions[i].right.size();
-		cout << productions[i].left.name << productions[i].left.type<< "->";
+		cout << productions[i].left.name << productions[i].left.type << "->";
 		for (int j = 0; j < size; j++)
 		{
 			Item temp = productions[i].right[j];
@@ -110,17 +110,17 @@ void Grammer::createVN_VT_ACTION()			//创建终结符和非终结符集
 
 	ifstream in1("VN.txt");			//读非终结符
 	string s;
-	while (getline(in1, s))					
+	while (getline(in1, s))
 	{
-		Item temp{ ItemType::VN,s,-1};
-		vn.push_back(temp);					
+		Item temp{ ItemType::VN,s,-1 };
+		vn.push_back(temp);
 	}
 	in1.close();
 	start = vn[0];			//设置起始符
 	ifstream in2("VT.txt");			//读终结符
 	while (getline(in2, s))
 	{
-		Item temp{ ItemType::VT,s,terminal_tag};
+		Item temp{ ItemType::VT,s,terminal_tag };
 		vt.push_back(temp);
 		terminal_tag++;
 	}
@@ -129,14 +129,14 @@ void Grammer::createVN_VT_ACTION()			//创建终结符和非终结符集
 	ifstream in3("ACTION.txt");			//读动作符
 	while (getline(in3, s))
 	{
-		Item temp{ ItemType::Action,s,action_tag};
+		Item temp{ ItemType::Action,s,action_tag };
 		action.push_back(temp);
 		action_tag++;
 	}
 	in3.close();
 	//cout << "here";
 	for (int i = 0; i < vn.size(); i++)
-		cout << vn[i].name <<" "<<vn[i].tag<< endl;
+		cout << vn[i].name << " " << vn[i].tag << endl;
 	for (int i = 0; i < vt.size(); i++)
 		cout << vt[i].name << " " << vt[i].tag << endl;
 	for (int i = 0; i < action.size(); i++)
@@ -148,6 +148,8 @@ void Grammer::getFirstSet(Item target)
 	int tag = 0;
 	int flag = 0;
 	//cout << "T:" << T << endl;
+	if (target.name == "Body-decl_2")
+		cout << "来了！" << endl;
 	for (int i = 0; i < T; i++)
 	{
 		flag = 0;
@@ -165,7 +167,7 @@ void Grammer::getFirstSet(Item target)
 			}
 			if (first_index >= productions[i].right.size())
 			{
-				cout<< "productions error!";
+				cout << "productions error!";
 				throw "productions error!";
 				return;
 			}
@@ -178,7 +180,7 @@ void Grammer::getFirstSet(Item target)
 			}
 			else if (isNotTerminal(productions[i].right[first_index]))
 			{
-				for (int j = first_index; j < productions[i].right.size(); j++)			
+				for (int j = first_index; j < productions[i].right.size(); j++)
 				{
 					if (isTerminal(productions[i].right[j]))				//终结符结束
 					{
@@ -189,6 +191,8 @@ void Grammer::getFirstSet(Item target)
 					{
 
 						//cout << "递归：" << productions[i].right[j].name << endl;
+						//if (getVNindex(target) < getVNindex(productions[i].right[j]))
+
 						getFirstSet(productions[i].right[j]);
 
 						set<string>::iterator it;
@@ -204,6 +208,7 @@ void Grammer::getFirstSet(Item target)
 
 							}
 							else
+
 								firstSet[getVNindex(target)].insert(*it);//将FIRST(Y)中的非$就加入FIRST(X)
 						}
 						//cout << endl;
@@ -214,14 +219,14 @@ void Grammer::getFirstSet(Item target)
 					else flag = 0;
 				}
 
-				
+
 
 				int len = 0;
 				for (int k = 0; k < productions[i].right.size(); k++)		//用于检查该左部的first集应加入空
 				{
-				  if (productions[i].right[k].type == ItemType::VN)
+					if (productions[i].right[k].type == ItemType::VN)
 						len++;
-							
+
 				}
 				if (flag == len)//所有右部first(Y)都有#,将$加入FIRST(X)中				//考虑可以将空产生式作为终结符，他的fisrt集为自己
 				{
@@ -229,14 +234,21 @@ void Grammer::getFirstSet(Item target)
 					firstSet[getVNindex(target)].insert("@");
 					cout << target.name << flag << endl;;
 				}
-					
-				
+
+
 			}
 			else
 				return;
 		}
 	}
-	
+	int index = getVNindex(target);
+	cout << target.name << " " << firstSet[index].size() << "--->";
+
+	for (set<string>::iterator it = firstSet[index].begin(); it != firstSet[index].end(); it++)
+	{
+		cout << (*it) << " ";
+	}
+	cout << endl;
 }
 /*
 void Grammer::getFollowSet(Item target)
@@ -255,7 +267,7 @@ void Grammer::getFollowSet(Item target)
 				break;
 			}
 		}
-		
+
 		if (index == -1) continue;
 		cout << i<<":"<<productions[i].left.name << ":";
 		cout << index<<endl;
@@ -291,8 +303,8 @@ void Grammer::getFollowSet(Item target)
 				}
 				else if( (isNotTerminal(nxt)))
 				{
-					
-					if (nxt.name == productions[i].left.name)		
+
+					if (nxt.name == productions[i].left.name)
 					{
 						int temp_index = index + 1;
 						while (temp_index < len)
@@ -308,7 +320,7 @@ void Grammer::getFollowSet(Item target)
 					set<string>::iterator it;
 					for (it = firstSet[getVNindex(nxt)].begin(); it != firstSet[getVNindex(nxt)].end(); it++)
 					{
-						
+
 						if ((*it) == "@")
 							isExt = 1;
 						else
@@ -339,7 +351,7 @@ void Grammer::getFollowSet(Item target)
 
 		else if(index == len - 1 && target.name != productions[i].left.name)
 		{
-			getFollowSet(productions[i].left);						
+			getFollowSet(productions[i].left);
 			set<string>::iterator it;
 			Item tmp = productions[i].left;
 			for (it = followSet[getVNindex(tmp)].begin(); it != followSet[getVNindex(tmp)].end(); it++)
@@ -358,7 +370,7 @@ void Grammer::getFollowSet(Item target)
 }*/
 void Grammer::getFollowSet(Item target)
 {
-	if (target.name == "Value_1") {
+	if (target.name == "Expression") {
 		int a;
 	}
 	for (int i = 0; i < T; i++)
@@ -376,10 +388,10 @@ void Grammer::getFollowSet(Item target)
 		}
 		if (index == -1) continue;
 		int next = index + 1;
-		
+
 		while (next < len)
 		{
-			if (isAction(productions[i].right[next])==false)
+			if (isAction(productions[i].right[next]) == false)
 			{
 				break;
 			}
@@ -388,7 +400,7 @@ void Grammer::getFollowSet(Item target)
 		}
 		if (index < len - 1 && next < len)
 		{
-			
+
 			for (int k = index + 1; k < len; k++)
 			{
 				flag = 0;
@@ -420,17 +432,17 @@ void Grammer::getFollowSet(Item target)
 				else
 					continue;
 
-				
+
 			}
-			for (int j = index+1; j < len; j++)
+			for (int j = index + 1; j < len; j++)
 			{
 				if (productions[i].right[j].type == ItemType::VN)
 					mark++;
 			}
-			if (mark == tag && tag!=0 && target.name != productions[i].left.name)
+			if (mark == tag && tag != 0 && target.name != productions[i].left.name)
 			{
-				cout <<"看这里！！"<< productions[i].left.name << endl;
-				//if(getVNindex(target)>getVNindex(productions[i].left))
+				cout << "看这里！！" << productions[i].left.name << endl;
+				if (getVNindex(target) < getVNindex(productions[i].left))
 					getFollowSet(productions[i].left);
 				set<string>::iterator it;
 				Item tmp = productions[i].left;
@@ -438,9 +450,9 @@ void Grammer::getFollowSet(Item target)
 					followSet[getVNindex(target)].insert(*it);
 			}
 		}
-		else if ((next>=len||index == len - 1 ) && (target.name != productions[i].left.name))
+		else if ((next >= len || index == len - 1) && (target.name != productions[i].left.name))
 		{
-			//if (getVNindex(target)>getVNindex(productions[i].left))
+			if (getVNindex(target) < getVNindex(productions[i].left))
 				getFollowSet(productions[i].left);
 			set<string>::iterator it;
 			Item tmp = productions[i].left;
@@ -459,32 +471,34 @@ void Grammer::getFollowSet(Item target)
 }
 void Grammer::createFirstSet()
 {
-	//cout << vn.size();
+	cout << "FIRST SET:" << endl;
 	for (int i = 0; i < vn.size(); i++)
 	{
-		//cout << vn[i].name << endl;
+		cout << "开始FIRST！" << vn[i].name << endl;
+
 		getFirstSet(vn[i]);
 
 	}
-	/*
-	cout << "FIRST SET:" << endl;
-	for (int i = 0; i < vn.size(); i++)
+
+	//cout << "FIRST SET:" << endl;
+	/*for (int i = 0; i < vn.size(); i++)
 	{
 		cout << vn[i].name << ": ";
 		set<string>::iterator it;
 		for (it = firstSet[i].begin(); it != firstSet[i].end(); it++)
 			cout << *it << "  ";
 		cout << endl;
-	
+
 	}*/
+	cout << "FIRST SUCCESS!";
 }
 void Grammer::createFollowSet()
 {
 	//cout << vn.size();
-	cout << "FOLLOW开始了"<<endl;
+	cout << "FOLLOW开始了" << endl;
 	int index = getVNindex(start);
 	followSet[index].emplace("#");
-	
+
 
 	/*
 	cout << "HERE!" << endl;
@@ -494,16 +508,16 @@ void Grammer::createFollowSet()
 	*/
 	for (int i = 0; i < vn.size(); i++)
 	{
-		cout <<"开始建立"<<vn[i].name << endl;
+		cout << "开始建立" << vn[i].name << endl;
 		string name = vn[i].name;
-		if (name == "Statement" || name == "While-statement" || name == "If-statement" )
+		/*if (name == "Statement" || name == "While-statement" || name == "If-statement" )
 			continue;
-		else if (name == "Expr" || name == "Expression")
+		/*else if (name == "Expr" || name == "Expression")
 		{
 			followSet[i].insert(";");
 			followSet[i].insert(")");
 			continue;
-		}
+		}*/
 		getFollowSet(vn[i]);
 
 	}
@@ -514,7 +528,7 @@ void Grammer::createFollowSet()
 		set<string>::iterator it;
 		for (it = followSet[i].begin(); it != followSet[i].end(); it++)
 			cout << *it << "  ";
-		cout << ">"<<endl;
+		cout << ">" << endl;
 	}
 }
 void Grammer::inputAndSolve()
@@ -550,7 +564,7 @@ void Grammer::inputAndSolve()
 				}
 				break;
 			case 1:								//右部
-				if (s[i] == '|' || i == size - 1 || s[i+1]=='\n')			//处理右部
+				if (s[i] == '|' || i == size - 1 || s[i + 1] == '\n')			//处理右部
 				{
 					if (name != "")
 					{
@@ -581,7 +595,7 @@ void Grammer::inputAndSolve()
 						name = "";
 						i++;
 					}
-					
+
 				}
 				else if (s[i] == '<')			//读到语义动作
 				{
@@ -619,38 +633,38 @@ void Grammer::inputAndSolve()
 	setType();
 	for (int i = 0; i < T; i++)
 	{
-		cout << productions[i].left.name<<"->";
-		for(int j=0 ;j<productions[i].right.size();j++)
-		cout << productions[i].right[j].name<< " ";
+		cout << productions[i].left.name << "->";
+		for (int j = 0; j < productions[i].right.size(); j++)
+			cout << productions[i].right[j].name << " ";
 		cout << "  " << productions[i].right.size();
 		cout << endl;
 	}
+}
+
+
+//remove();
+//vt.push_back("$");
+//first
+/**
+	for (int i = 0; i < vn.size(); i++)
+	{
+		 createFirstSet(vn[i]);
 	}
 
+	for (int i = 0; i < vn.size(); i++)
+	{
+		if (i == 0)
+			followSet[0].insert("$");
+		createFollowSet(vn[i]);
+	}
 
-		//remove();
-		//vt.push_back("$");
-		//first
-	/**
-		for (int i = 0; i < vn.size(); i++)
-		{
-			 createFirstSet(vn[i]);
-		}
+	for (int i = 0; i < vt.size(); i++)
+	{
+		if (vt[i] != "#")
+			vt.push_back(vt[i]);
+	}
+**/
 
-		for (int i = 0; i < vn.size(); i++)
-		{
-			if (i == 0)
-				followSet[0].insert("$");
-			createFollowSet(vn[i]);
-		}
-
-		for (int i = 0; i < vt.size(); i++)
-		{
-			if (vt[i] != "#")
-				vt.push_back(vt[i]);
-		}
-	**/
-	
 /*void Grammer::remove()
 	{
 		string rep[100];
@@ -741,360 +755,366 @@ void Grammer::inputAndSolve()
 			}
 		}
 		*/
-  void Grammer::display()
+void Grammer::display()
+{
+
+	cout << "FIRST SET:" << endl;
+	for (int i = 0; i < vn.size(); i++)
 	{
-	  
-	  
-	  cout << "FIRST SET:" << endl;
-	  for (int i = 0; i < vn.size(); i++)
-	  {
-		  cout << vn[i].name << ": ";
-		  set<string>::iterator it;
-		  for (it = firstSet[i].begin(); it != firstSet[i].end(); it++)
-			  cout << *it << "  ";
-		  cout << endl;
-	  }
-		cout << "FOLLOW SET:" << endl;
-		for (int i = 0; i < vn.size(); i++)
-		{
-			cout << vn[i].name << ": ";
-			set<string>::iterator it;
-			for (it = followSet[i].begin(); it != followSet[i].end(); it++)
-				cout << *it << "  ";
-			cout << endl;
-		}
-	  
+		cout << vn[i].name << ": ";
+		set<string>::iterator it;
+		for (it = firstSet[i].begin(); it != firstSet[i].end(); it++)
+			cout << *it << "  ";
+		cout << endl;
 	}
-  bool Grammer::createLL1_Map()			//需要增加判断				//有错误！！！！！！！！！！！！！！！！！！！！！！1
-  {
-	  for (vector<Item>::iterator it = vt.begin(); it != vt.end(); it++)
-	  {
-		  if ((*it).name == "@")
-		  {
-			  vt.erase(it);
-			  break;
-		  }
-	  }
-	  /*
-	  for (int i = 0; i < vn.size(); i++)
-	  {
-			  firstSet[i].erase("@");
-	  }
-	  */
-	  //vt.push_back(Item{ ItemType::VT,"#" });			//终结符加入#
+	cout << "FOLLOW SET:" << endl;
+	for (int i = 0; i < vn.size(); i++)
+	{
+		cout << vn[i].name << ": ";
+		set<string>::iterator it;
+		for (it = followSet[i].begin(); it != followSet[i].end(); it++)
+			cout << *it << "  ";
+		cout << endl;
+	}
 
-	  for (int i = 0; i < vn.size(); i++)				//初始化
-		  for (int j = 0; j < vt.size(); j++)
-			  LL1_Map[i][j] = -1;
+}
+bool Grammer::createLL1_Map()			//需要增加判断				//有错误！！！！！！！！！！！！！！！！！！！！！！1
+{
+	for (vector<Item>::iterator it = vt.begin(); it != vt.end(); it++)
+	{
+		if ((*it).name == "@")
+		{
+			vt.erase(it);
+			break;
+		}
+	}
+	/*
+	for (int i = 0; i < vn.size(); i++)
+	{
+			firstSet[i].erase("@");
+	}
+	*/
+	//vt.push_back(Item{ ItemType::VT,"#" });			//终结符加入#
 
-	  for (int i = 0; i < T; i++)
-	  {
-		  int len = productions[i].right.size();
-		  int flag = 0;			//空标志
-		  int tag = 0;			//所有右部空标识
-		  //Item tmp = productions[i].right[index];
-		  for (int k = 0; k < len ; k++)
-		  {
-			  flag = 0;
-			  while (k < len)						//省略语义动作
-			  {
-				  if (isAction(productions[i].right[k]) == false)
-				  {
-					  break;
-				  }
-				  else
-				  {
-					  k++;
-				  }
+	for (int i = 0; i < vn.size(); i++)				//初始化
+		for (int j = 0; j < vt.size(); j++)
+			LL1_Map[i][j] = -1;
 
-			  }
-			  if (k >= len)
-			  {
-				  cout << "Table error!" << endl;
-				  return false;
-			  }
+	for (int i = 0; i < T; i++)
+	{
+		int len = productions[i].right.size();
+		int flag = 0;			//空标志
+		int tag = 0;			//所有右部空标识
+		//Item tmp = productions[i].right[index];
+		for (int k = 0; k < len; k++)
+		{
+			flag = 0;
+			while (k < len)						//省略语义动作
+			{
+				if (isAction(productions[i].right[k]) == false)
+				{
+					break;
+				}
+				else
+				{
+					k++;
+				}
 
-			  Item tmp = productions[i].right[k];
-			  if (isTerminal(tmp))			//终结符 
-			  {
-				  if (tmp.name != "@")
-				  {
-					  if (LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)] != -1)
-					  {
-						  cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)];
-						  cout << "error1 " << endl;
-						  return false;
-					  }
-					  LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)] = i;
-				  }
-				  if (tmp.name == "@")
-				  {
-					  set<string>::iterator  it;
-					  //cout << "就是这里！！！！" << endl;
-					  for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
-					  {
-						  if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
-						  {
-							  cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)];
-							  cout << "error2 " << endl;
-							  return false;
-						  }
-						  LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
-					  }
-				  }
-				  break;
-			  }
-			  else if (isNotTerminal(tmp))						//非终结符
-			  {
-				  set<string>::iterator it;
-				  for (it = firstSet[getVNindex(tmp)].begin(); it != firstSet[getVNindex(tmp)].end(); it++)
-				  {
-					  
-					  if ((*it) == "@")
-					  {
-						  flag = 1;
-						  tag++;
-					  }
-					  else
-					  {
-						  if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
-						  {
-							  cout << productions[i].left.name << "->" << *it;
-							  cout << "error3 " << endl;
-							  return false;
-						  }
-						  LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
-					  }
-				  }
-				  if (flag == 0)
-				  {
-					  break;
-				  }
-				  /*if (firstSet[getVNindex(tmp)].count("@") != 0)				//含空产生式
-				  {
-					  set<string>::iterator  it;
-					  for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
-					  {
+			}
+			if (k >= len)
+			{
+				cout << "Table error!" << endl;
+				return false;
+			}
 
-						  if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
-						  {
-							  cout << "error4 " << endl;
-							  return false;
-						  }
-						  LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
-					  }
-				  }
-				  */
-			  }
-			  else
-			  {
-				  cout << "Table error2!" << endl;
-				  return false;
-			  }
+			Item tmp = productions[i].right[k];
+			if (isTerminal(tmp))			//终结符 
+			{
+				if (tmp.name != "@")
+				{
+					if (LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)] != -1)
+					{
+						cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)];
+						cout << "error1 " << endl;
+						return false;
+					}
+					LL1_Map[getVNindex(productions[i].left)][getVTindex(tmp)] = i;
+				}
+				if (tmp.name == "@")
+				{
+					set<string>::iterator  it;
+					//cout << "就是这里！！！！" << endl;
+					for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
+					{
+						if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
+						{
+							cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)];
+							cout << "error2 " << endl;
+							return false;
+						}
+						LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
+					}
+				}
+				break;
+			}
+			else if (isNotTerminal(tmp))						//非终结符
+			{
+				set<string>::iterator it;
+				for (it = firstSet[getVNindex(tmp)].begin(); it != firstSet[getVNindex(tmp)].end(); it++)
+				{
 
-			  int mark = 0;
-			  for (int j = 0; j < len; j++)
-				 {
-					  if (productions[i].right[j].type == ItemType::VN)
-						  mark++;
-					  
-				  }
-			  if (mark == tag)
-			  {
-				  cout << "有人在吗！！" << endl;
-				  set<string>::iterator  it;
-				  for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
-				  {
-					  if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
-					  {
-						  cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)];
-						  cout << "error4 " << endl;
-						  return false;
-					  }
-					  LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
-				  }
-			  }
-			  
-		  }
-	  }
-	  return true;
-  }
-  void Grammer::print_out()
-  {
-	  ofstream cout("Table_Output.txt");
-	  cout << setw(15) << '\0';
-	  for (int i = 0; i < vt.size(); i++)
-	  {
-		  string tercopy;
-		  tercopy += "  ";
-		  tercopy += vt[i].name;
-		  cout << left << setw(15) << tercopy;
-	  }
-	  cout << endl;
-	  for (int i = 0; i < vn.size(); i++)
-	  {
-		  string nonter;
-		  nonter = vn[i].name + ": ";
-		  cout << setw(10) << nonter;
-		  
-		  for (int j = 0; j < vt.size(); j++)
-		  {
-			  if (LL1_Map[i][j] == -1)
-				  cout << setw(10) << "@";
-			  else
-			  {
-				  /*
-				  int k = 0;
-				  string ss;
-				  ss += vn[i].name;
-				  ss += "->";
-				  for (Item temp : productions[LL1_Map[i][j]].right)
-				  {
-					  ss += temp.name;
-				  }
-				  cout << left << setw(15) << ss;
-				  */
-				  cout << left << setw(10)<<LL1_Map[i][j];
+					if ((*it) == "@")
+					{
+						flag = 1;
+						tag++;
+					}
+					else
+					{
+						if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
+						{
+							cout << productions[i].left.name << "->" << *it;
+							cout << "error3 " << endl;
+							return false;
+						}
+						LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
+					}
+				}
+				if (flag == 0)
+				{
+					break;
+				}
+				/*if (firstSet[getVNindex(tmp)].count("@") != 0)				//含空产生式
+				{
+					set<string>::iterator  it;
+					for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
+					{
 
-			  }
-		  }
-		  cout << endl;
-	  }
-	  //cout.close();
-  }
-  void Grammer::manage()
-  {
-	  inputAndSolve();
-	  createFirstSet();
-	  createFollowSet();
-	  display();
-	  if (createLL1_Map() == false)
-	  {
-		  cout << "error";
-		  return;
-	  }
+						if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
+						{
+							cout << "error4 " << endl;
+							return false;
+						}
+						LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
+					}
+				}
+				*/
+			}
+			else
+			{
+				cout << "Table error2!" << endl;
+				return false;
+			}
 
-	  print_out();
-	  runParserLL1();
+			int mark = 0;
+			for (int j = 0; j < len; j++)
+			{
+				if (productions[i].right[j].type == ItemType::VN)
+					mark++;
 
-	  lex.print();
-	  return;
-  }
-  void Grammer::runParserLL1()		//语法分析
-  {
-	  stack<Item>SYN;		//语法栈
-	  stack<Item>SEM;
-	  SYN.push(Item{ ItemType::VT,"#",Token_tag::End });
-	  SYN.push(start);
-	  semantic.push();
-	  Item x = SYN.top();
-	  //lex.set("void main(){int a;}#");
+			}
+			if (mark == tag)
+			{
+				cout << "有人在吗！！" << endl;
+				set<string>::iterator  it;
+				for (it = followSet[getVNindex(productions[i].left)].begin(); it != followSet[getVNindex(productions[i].left)].end(); it++)
+				{
+					if (LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] != -1)
+					{
+						cout << productions[i].left.name << " " << LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)];
+						cout << "error4 " << endl;
+						return false;
+					}
+					LL1_Map[getVNindex(productions[i].left)][getVTindex(*it)] = i;
+				}
+			}
 
-	  fstream fs("text.txt"); // 创建个文件流对象,并打开"file.txt"
-	  stringstream ss; // 创建字符串流对象
-	  ss << fs.rdbuf(); // 把文件流中的字符输入到字符串流中
-	  string str = ss.str(); // 获取流中的字符串 
-	  lex.set(str + "#");
+		}
+	}
+	return true;
+}
+void Grammer::print_out()
+{
+	ofstream cout("Table_Output.txt");
+	cout << setw(15) << '\0';
+	for (int i = 0; i < vt.size(); i++)
+	{
+		string tercopy;
+		tercopy += "  ";
+		tercopy += vt[i].name;
+		cout << left << setw(15) << tercopy;
+	}
+	cout << endl;
+	for (int i = 0; i < vn.size(); i++)
+	{
+		string nonter;
+		nonter = vn[i].name + ": ";
+		cout << setw(10) << nonter;
 
-	  semantic.set_prev_token(cur);
-	  cur = lex.next_token();
-	  semantic.set_cur_token(cur);
-	  semantic.set_ident(lex.ptr_ident());
-	  while (SYN.empty() == false)
-	  {
-		  SYN.pop();
-		  cout << "\n\nstack:" << x.name << endl;
-		  while (cur.id == 0 || cur.id == 32 || cur.id == 9)
-		  {
-			  cur = lex.next_token();
-		  }
-		  if (isTerminal(x))			//终结符
-		  {
-			  //cout << x.name << x.tag;
-			  cout << "mark 1" << endl;
-			  if (match(x) == true)
-			  {
-				  if (x.name == "#")
-				  {
-					  cout << "success!" << endl;
-					  break;
-				  }
-			  }
-			  else
-				  cout << "error1" << endl;
+		for (int j = 0; j < vt.size(); j++)
+		{
+			if (LL1_Map[i][j] == -1)
+				cout << setw(10) << "@";
+			else
+			{
+				/*
+				int k = 0;
+				string ss;
+				ss += vn[i].name;
+				ss += "->";
+				for (Item temp : productions[LL1_Map[i][j]].right)
+				{
+					ss += temp.name;
+				}
+				cout << left << setw(15) << ss;
+				*/
+				cout << left << setw(10) << LL1_Map[i][j];
 
-		  }
-		  else if (isNotTerminal(x))						//非终结符
-		  {
-			  int index = LL1_Map[getVNindex(x)][getVTindex(cur)];
-			  if (index == -1)
-			  {
-				  cout << cur.id;
-				  cout << "看这里" << x.name << vt[getVTindex(cur)].name << endl;
-				  cout << x.name << endl << x.tag;
-				  cout << "\nerror2!" << endl;
-			  }
-			  else
-			  {
-				  push_right(SYN, index);
-				  cout << "mark 2 " << cur.id << endl;
-			  }
-		  }
-		  else if (isAction(x))						//语义动作
-		  {
+			}
+		}
+		cout << endl;
+	}
+	//cout.close();
+}
+void Grammer::manage()
+{
+	inputAndSolve();
+	createFirstSet();
+	createFollowSet();
+	display();
+	if (createLL1_Map() == false)
+	{
+		cout << "error";
+		return;
+	}
 
-			  //调用语义动作函数
-			  cout << x.name << x.tag << "mark 3" << endl;
-			  cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << x.tag << endl;
-			  void (Semantic::*xx)() = semantic.func[x.tag];
-			  (semantic.*xx)();
-			  
+	print_out();
+	runParserLL1();
 
-		  }
-		  else
-		  {
-			  cout << "error 3!" << endl;
-		  }
-		  x = SYN.top();
+	lex.print();
+	return;
+}
+void Grammer::runParserLL1()		//语法分析
+{
+	stack<Item>SYN;		//语法栈
+	stack<Item>SEM;
+	SYN.push(Item{ ItemType::VT,"#",Token_tag::End });
+	SYN.push(start);
+	semantic.push();
+	Item x = SYN.top();
+	//lex.set("void main(){int a;}#");
 
-	  }
+	fstream fs("text.txt"); // 创建个文件流对象,并打开"file.txt"
+	stringstream ss; // 创建字符串流对象
+	ss << fs.rdbuf(); // 把文件流中的字符输入到字符串流中
+	string str = ss.str(); // 获取流中的字符串 
+	lex.set(str + "#");
 
-  }
-  bool Grammer::match(Item x)
-  {
-	  if (x.tag == cur.id)
-	  {
-		  cout << "match" << x.name << endl;
-		  semantic.set_prev_token(cur);
-		  cur = lex.next_token();
-		  semantic.set_cur_token(cur);
-		  return true;
-	  }
-	  else
-	  {
-		  cout << "x:" << x.name << x.tag << " 待匹配" << cur.id;
-		  if (x.tag == cur.id)cout << "嘿嘿";
-		  semantic.set_prev_token(cur);
-		  cur = lex.next_token();
-		  semantic.set_cur_token(cur);
+	semantic.set_prev_token(cur);
+	cur = lex.next_token();
+	semantic.set_cur_token(cur);
+	semantic.set_ident(lex.ptr_ident());
+	while (SYN.empty() == false)
+	{
+		SYN.pop();
+		cout << "\n\nstack:" << x.name << endl;
+		while (cur.id == 0 || cur.id == 32 || cur.id == 9)
+		{
+			cur = lex.next_token();
+		}
+		if (isTerminal(x))			//终结符
+		{
+			//cout << x.name << x.tag;
+			cout << "mark 1" << endl;
+			if (match(x) == true)
+			{
+				if (x.name == "#")
+				{
+					cout << "success!" << endl;
+					break;
+				}
+			}
+			else
+				cout << "error1" << endl;
 
-		  return false;
-	  }
-  }
-  void Grammer::push_right(stack<Item>&SYN,int index)
-  {
-	  vector<Item> temp = productions[index].right;
-	  if ((temp.size()==0) || (temp.size() == 1 && temp[0].name == "@"))
-		  return;
-	  for (int i = temp.size()-1; i >=0; i--)
-	  {
-		  SYN.push(temp[i]);
-	  }
-  }
- string Grammer::next()
- {
-	 string s;
-	 cout << "请输入w:" << endl;
-	 cin >> s;
-	 return s;
- }
+		}
+		else if (isNotTerminal(x))						//非终结符
+		{
+			int index = LL1_Map[getVNindex(x)][getVTindex(cur)];
+			if (index == -1)
+			{
+				cout << cur.id;
+				cout << "看这里" << x.name << vt[getVTindex(cur)].name << endl;
+				cout << x.name << endl << x.tag;
+				cout << "\nerror2!" << endl;
+			}
+			else
+			{
+				push_right(SYN, index);
+				cout << "mark 2 " << cur.id << endl;
+			}
+		}
+		else if (isAction(x))						//语义动作
+		{
+
+			//调用语义动作函数
+			cout << x.name << x.tag << "mark 3" << endl;
+			try {
+				void (Semantic::*xx)() = semantic.func[x.tag];
+				(semantic.*xx)();
+			}
+			catch (const char*msg) {
+
+				printf("\n\n***Error ! 语法错误\n" );
+				cerr << msg << endl;
+				exit(1);
+			}
+			 
+
+		}
+		else
+		{
+			cout << "error 3!" << endl;
+		}
+		x = SYN.top();
+
+	}
+
+}
+bool Grammer::match(Item x)
+{
+	if (x.tag == cur.id)
+	{
+		cout << "match" << x.name << endl;
+		semantic.set_prev_token(cur);
+		cur = lex.next_token();
+		semantic.set_cur_token(cur);
+		return true;
+	}
+	else
+	{
+		cout << "x:" << x.name << x.tag << " 待匹配" << cur.id;
+		if (x.tag == cur.id)cout << "嘿嘿";
+		semantic.set_prev_token(cur);
+		cur = lex.next_token();
+		semantic.set_cur_token(cur);
+
+		return false;
+	}
+}
+void Grammer::push_right(stack<Item>&SYN, int index)
+{
+	vector<Item> temp = productions[index].right;
+	if ((temp.size() == 0) || (temp.size() == 1 && temp[0].name == "@"))
+		return;
+	for (int i = temp.size() - 1; i >= 0; i--)
+	{
+		SYN.push(temp[i]);
+	}
+}
+string Grammer::next()
+{
+	string s;
+	cout << "请输入w:" << endl;
+	cin >> s;
+	return s;
+}

@@ -64,7 +64,6 @@ public:
 	void ptr_init();
 	void ptr_inc();
 	void ptr_clear();
-	void addr_clear();
 	void pk_assign();
 	void pk_paren();
 	void pk_add();
@@ -89,8 +88,6 @@ public:
 	void load_param();
 	void call();
 	void var_value();
-	void conv_init(); //ÀàÐÍ×ª»»
-	void conv();
 	void gpu_load();
 	void push();
 };

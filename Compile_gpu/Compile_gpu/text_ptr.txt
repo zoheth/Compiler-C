@@ -1,0 +1,15 @@
+int main()
+{
+	int ***p0;
+	int **p1;
+	int *p2;
+	int res;
+	res=2;
+	p2=&res;
+	p1=&p2;
+	p0=&p1;
+	print(***p0);
+	***p0=100;
+	print(res);
+	return 0;
+}

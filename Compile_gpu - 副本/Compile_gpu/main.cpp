@@ -6,8 +6,8 @@
 
 int main()
 {
-	asm_text = (int *)malloc(1000 * sizeof(int));
-	asm_data = (int *)malloc(1000 * sizeof(int));
+	asm_text = (int *)malloc(10000 * sizeof(int));
+	asm_data = (int *)malloc(10000 * sizeof(int));
 	/*TableStack res;
 	res.manage();*/
 	Grammer g;
@@ -31,9 +31,12 @@ int main()
 	cout << endl;
 	*/
 	cout << "\n+++++++++++++++++++++++++++++++++++++\n" << endl;
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 100; i++) {
 		cout << asm_text[i] << endl;
 	}
+	VM v;
+	v.print(5);
+	v.run();
 	return 0;
-}
 
+}

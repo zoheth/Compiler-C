@@ -40,11 +40,29 @@ enum Action_tag {
 	while_begin,			//13
 	while_end,				//14
 	imm_num,
+	ptr_init,
+	ptr_inc,
+	ptr_clear,
 	var_value,
 	pk_assign,
+	pk_paren,
 	pk_add,
 	pk_mul,
-	back
+	pk_sub,
+	pk_div,
+	pk_land,
+	pk_lor,
+	pk_gt,
+	pk_lt,
+	pk_eq,
+	pk_neq,
+	back,
+	back_a,
+	array_type_rec,
+	array_ok,
+	call_init,
+	call,
+	load_param
 };
 enum ItemType
 {VT = 0,VN = 1,Action = 2};
@@ -107,5 +125,25 @@ public:
 	void push_right(stack<Item>&SYN,int index);	    //逆向压栈
 	string next();				   //取下一个token
 
+};
+
+
+class VM {
+private:
+	int ax = 0;//ax寄存器
+	int *bp,//寻址指针
+		*pc,//程序指针
+		*sp,//堆栈指针
+		*out;
+	int *tmp;
+	int *stack;
+	int  poolsize;
+	void step(int i);
+	int flag;
+public:
+	VM();
+	int fetch();
+	int run();
+	void print(int i);
 };
 #endif 

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include<stack>
 using namespace std;
 extern enum {
 	GPU, LEA, IMM, JMP, CALL, JZ, JNZ, ENT, ADJ, LEV, LI, LC, SI, SC, PUSH,
@@ -45,9 +46,15 @@ struct Identifier {  //与C4结构一样 name改成了string 暂时用作符号表
 	int class_;
 	int type;
 	int value;
+	/////////党加
+	stack<int>Bclass;
+	stack<int>Btype;
+	stack<int>Bvalue;
+	/*
 	int Bcalss;
 	int Btype;
 	int Bvalue;
+	*/
 	Identifier();
 	string get_name() const;
 	bool operator==(const Identifier & obj2) const;  //重载==用于find

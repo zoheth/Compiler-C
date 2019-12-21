@@ -41,7 +41,7 @@ bool Identifier::operator==(string str) const
 }
 void Identifier::print() {
 	cout << name + " \ttoken: " << token << endl;
-	cout << "\t\tcalss: " << class_ << ", value:" << value << ", type:" << type << endl;
+	cout << "\t\tclass: " << class_ << ", value:" << value << ", type:" << type << endl;
 }
 Token::Token(int i, int v) {
 	id = i;
@@ -79,6 +79,12 @@ void Lex::init() {
 	ident.value = PRTF;
 	ident.token = Id;
 	IDENTS.push_back(ident);
+	Identifier ident1;
+	ident1.name = "malloc";
+	ident1.class_ = Sys;
+	ident1.value = MALC;
+	ident1.token = Id;
+	IDENTS.push_back(ident1);
 	K.push_back("char");
 	K.push_back("string");
 	K.push_back("else");
@@ -91,7 +97,6 @@ void Lex::init() {
 	K.push_back("void");
 //10	
 	K.push_back("printf");
-	K.push_back("malloc");
 	K.push_back("exit");
 
 
@@ -207,7 +212,7 @@ Token Lex::key_and_i_token(string str) {
 		//vector<string>::iterator res2 = find(I.begin(), I.end(), str);
 		//临时输出
 		cout << endl;
-		cout << "在这里" << str << '\t';
+		cout << str << '\t';
 		if (res1 != K.end()) {
 			the_token.set(Id + (res1 - K.begin()) + 1);
 			return the_token;
@@ -362,7 +367,7 @@ Token Lex::delimiter_token() {
 		the_token.set(Lt);
 		return the_token;
 	}
-	else if (text[pos] == '~') /*{								//<=
+	else if (text[pos] == '^') /*{								//<=
 							   if (pos + 1 < text.size() && text[pos + 1] == '=') {
 							   pos++;
 							   //临时输出

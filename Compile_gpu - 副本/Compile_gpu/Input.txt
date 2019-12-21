@@ -21,17 +21,13 @@ Statement->If-statement |While-statement |{ Statement_1 } |return Expression <le
 Statement_1->Statement Statement_1|@ 
 If-statement->if ( Expression <back>) <if-begin>Statement else <else-begin>Statement <if-end-rec> 
 While-statement->while <after-while>( Expression <back>) <while-begin>Statement <while-end> 
-Expression->int_const <imm-num>Expr |id <var-value> IDN Expr |( E-or-T |R_Pointer |Addr 
-Expr->= <pk-assign>Expression <back>|+ <pk-add>Expression <back>|- <pk-sub>Expression <back>|* <pk-mul>Expression <back>|/ <pk-div>Expression <back>|&& <pk-lan>Expression <back>|^^ <pk-lor>Expression <back>|& <pk-and>Expression <back>|^ <pk-xor>Expression <back>|~ <pk-or>Expression <back>|> <pk-gt>Expression <back>|>> <pk-lt>Expression <back>|== <pk-eq>Expression <back>|!= <pk-neq>Expression <back>|@ 
+Expression->int_const <imm-num>Expr |id <var-value>IDN Expr |( <pk-paren>Expression <back-1>) Expr |R_Pointer 
+Expr->= <pk-assign>Expression <back>|+ <pk-add>Expression <back>|- <pk-sub>Expression <back>|* <pk-mul>Expression <back>|/ <pk-div>Expression <back>|&& <pk-lan>Expression <back>|^^ <pk-lor>Expression <back>|> <pk-gt>Expression <back>|>> <pk-lt>Expression <back>|== <pk-eq>Expression <back>|!= <pk-neq>Expression <back>|@ 
 Func-call-><call-init>( <pk-paren>Run-params <call> <back-1>) 
 Run-params->Expression <load-param>Params |@ 
 Params->, Expression <load-param>Params |@ 
 R_Pointer->* <ptr-init>R_Pointer_1 R_Pointer_2 <ptr-clear>Expr 
 R_Pointer_1->* <ptr-inc>R_Pointer_1 |@ 
-R_Pointer_2->( E-or-T |id <var-value> 
-Addr->& <ptr-init>Addr_1 Addr_2 <addr-clear>Expr 
-Addr_1->& <ptr-inc>Addr_1 |@ 
-Addr_2->( E-or-T |id <var-value> 
-E-or-T-><pk-paren>Expression <back-1>) Expr |Type <conv-init>R_Pointer_1 ) Expression <conv> 
+R_Pointer_2->( <pk-paren>id <var-value>IDN Expr <back-1>) |id 
 IDN->Func-call |Array |@ 
-Array->[ <array-type>Expression <back-1>] <array> 
+Array-><array-type>[ <pk-paren>Expression <back-1>] <array>

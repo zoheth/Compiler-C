@@ -29,5 +29,9 @@ Params
 R_Pointer
 R_Pointer_1
 R_Pointer_2
+Addr
+Addr_1
+Addr_2
+E-or-T
 IDN
 Array

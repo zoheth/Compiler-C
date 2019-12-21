@@ -1,0 +1,11 @@
+int main()
+{
+	int i;
+	int res;
+	res=2;
+	i=(int)&res;
+	print(i);
+	i=*(int *)i;
+	print(i);
+	return 0;
+}

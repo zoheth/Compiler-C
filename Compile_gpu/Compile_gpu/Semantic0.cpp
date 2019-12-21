@@ -10,6 +10,7 @@ void Semantic::ident_rec() {
 	//CUR_ID_index++;
 	//CUR_ID在此之前就已经更新 更新id不需要查找 直接下一个
 	CUR_ID->type = type;
+
 	if (token == '(') {  //此时的token为下一个token
 		CUR_ID->class_ = Fun;
 		CUR_ID->value = int(code_text + 1);		//！！！！函数地址,暂时未确定形式
@@ -21,6 +22,7 @@ void Semantic::ident_rec() {
 											//！！！！数据地址自增
 		cur_data++;
 	}
+	///////////////////////????????
 	while (type >= PTR) {
 		type -= PTR;
 	}
@@ -81,7 +83,7 @@ void Semantic::func_enter() {
 	code_text++;
 	*code_text = ENT;
 	code_text++;
-	*code_text = pos_local - params;
+	*code_text = pos_local - params-1;
 }
 void Semantic::leave() {
 	code_text++;
@@ -136,7 +138,9 @@ void Semantic::pk_assign() {
 	}
 	level.push(Assign);
 }
-
+void Semantic::pk_paren() {
+	level.push(Open_paren);
+}
 void Semantic::pk_add() {
 	code_text++;
 	*code_text = PUSH;
@@ -147,9 +151,76 @@ void Semantic::pk_mul() {
 	*code_text = PUSH;
 	level.push(Mul);
 }
+void Semantic::pk_sub() {
+	code_text++;
+	*code_text = PUSH;
+	level.push(Sub);
+}
+void Semantic::pk_div() {
+	code_text++;
+	*code_text = PUSH;
+	level.push(Div);
+}
+void Semantic::pk_land()
+{
+	code_text++;
+	*code_text = JZ;
+	code_text++;
+	addr = code_text;			//把跳转的地址保留
+
+}
+void Semantic::pk_lor()
+{
+	code_text++;
+	*code_text = JNZ;
+	code_text++;
+	addr = code_text;
+}
+void Semantic::pk_and()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(And);
+}
+void Semantic::pk_or()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Or);
+}
+void Semantic::pk_xor()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Xor);
+}
+void Semantic::pk_gt()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Gt);
+}
+void Semantic::pk_lt()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Lt);
+}
+void Semantic::pk_eq()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Eq);
+}
+void Semantic::pk_neq()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Ne);
+}
 void Semantic::back() {
 	cout << level.top() << " " << token.id << endl;
-	while (level.top()!=0&&(level.top()>token.id||token.id> Close_paren||token.id<Assign)) {
+	while (level.top()!=0&&(level.top()>token.id||token.id>= Close_paren||token.id<Assign)&&level.top()!=Open_paren) {
 		int temp = level.top();
 		level.pop();
 		if (temp == Assign) {
@@ -165,9 +236,118 @@ void Semantic::back() {
 			code_text++;
 			*code_text = MUL;
 		}
+		else if (temp == Sub)
+		{
+			code_text++;
+			*code_text = SUB;
+		}
+		else if (temp == Div)
+		{
+			code_text++;
+			*code_text = DIV;
+		}
+		else if (temp == Lan)
+		{
+
+			*addr = (int)(code_text + 1);
+			expr_type = INT;
+		}
+		else if (temp == Lor)
+		{
+			*addr = (int)(code_text + 1);
+			expr_type = INT;
+		}
+		else if (temp == Eq)
+		{
+			code_text++;
+			*code_text = EQ;
+			expr_type = INT;
+		}
+		else if (temp == Ne)
+		{
+			code_text++;
+			*code_text = NE;
+			expr_type = INT;
+		}
+		else if (temp == Gt)
+		{
+			code_text++;
+			*code_text = GT;
+			expr_type = INT;
+		}
+		else if (temp == Lt)
+		{
+			code_text++;
+			*code_text = LT;
+			expr_type = INT;
+		}
+		else if (temp == And)
+		{
+			code_text++;
+			*code_text = AND;
+			expr_type = INT;
+		}
+		else if (temp == Or)
+		{
+			code_text++;
+			*code_text = OR;
+			expr_type = INT;
+		}
 	}
 }
-
+void Semantic::back_a() {
+	//cout << level.top() << " " << token.id << endl;
+	while (level.top() != 0 && (level.top() > token.id || token.id >= Close_paren || token.id < Assign)) {
+		int temp = level.top();
+		level.pop();
+		if (temp == Open_paren) {
+			break;
+		}
+		if (temp == Assign) {
+			//expr_type
+			code_text++;
+			*code_text = (expr_type == CHAR) ? SC : SI;
+		}
+		else if (temp == Add) {
+			code_text++;
+			*code_text = ADD;
+		}
+		else if (temp == Mul) {
+			code_text++;
+			*code_text = MUL;
+		}
+	}
+}
+void Semantic::pk_brak()
+{
+	code_text++;
+	*code_text = PUSH;
+	level.push(Brak_l);
+}
+void Semantic::back_brak()
+{
+	while (level.top() != 0 && (level.top() > token.id || token.id >= Close_paren || token.id < Assign)) {
+		int temp = level.top();
+		level.pop();
+		if (temp == Brak_l) {
+			break;
+		}
+		if (temp == Assign) {
+			//expr_type
+			code_text++;
+			*code_text = (expr_type == CHAR) ? SC : SI;
+		}
+		else if (temp == Add) {
+			code_text++;
+			*code_text = ADD;
+		}
+		else if (temp == Mul) {
+			code_text++;
+			*code_text = MUL;
+		}
+		
+	}
+}
 void Semantic::gpu_parameter_rec() {
 	CUR_ID->Bcalss = CUR_ID->class_;
 	CUR_ID->class_ = Dev;
@@ -224,9 +404,9 @@ void Semantic::call() {
 	else if (the_func_id->class_ == Gpu) {
 		
 	}
-	else {
+	/*else {
 		throw "非法函数";
-	}
+	}*/
 	if(adj_size>0){
 		code_text++;
 		*code_text = ADJ;
@@ -260,9 +440,22 @@ void Semantic::push() {
 	func.push_back(&Semantic::imm_num);
 	func.push_back(&Semantic::var_value);
 	func.push_back(&Semantic::pk_assign);
+	func.push_back(&Semantic::pk_paren);
 	func.push_back(&Semantic::pk_add);
 	func.push_back(&Semantic::pk_mul);
+	func.push_back(&Semantic::pk_sub);
+	func.push_back(&Semantic::pk_div);
+	func.push_back(&Semantic::pk_land);
+	func.push_back(&Semantic::pk_lor);
+	func.push_back(&Semantic::pk_gt);
+	func.push_back(&Semantic::pk_lt);
+	func.push_back(&Semantic::pk_eq);
+	func.push_back(&Semantic::pk_neq);
 	func.push_back(&Semantic::back);
+	func.push_back(&Semantic::back_a);
+	func.push_back(&Semantic::call_init);
+	func.push_back(&Semantic::call);
+	func.push_back(&Semantic::load_param);
 }
 
 

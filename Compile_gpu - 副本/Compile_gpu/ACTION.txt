@@ -17,7 +17,6 @@ imm-num
 ptr-init
 ptr-inc
 ptr-clear
-addr-clear
 var-value
 pk-assign
 pk-paren
@@ -31,9 +30,6 @@ pk-gt
 pk-lt
 pk-eq
 pk-neq
-pk-and
-pk-or
-pk-xor
 back
 back-1
 array-type
@@ -41,5 +37,4 @@ array
 call-init
 call
 load-param
-conv-init
-conv
+
